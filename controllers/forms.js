@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 module.exports = {
   addmy: (req, res) => {
     mongoose.connect(
-      process.env.DB_CONNECTION_ONE,
+      process.env.DB_CONNECTION,
       { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
       (err) => {
         let result = {};
@@ -46,7 +46,7 @@ module.exports = {
   },
   addfam: (req, res) => {
     mongoose.connect(
-      process.env.DB_CONNECTION_ONE,
+      process.env.DB_CONNECTION,
       { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
       (err) => {
         let result = {};
@@ -86,7 +86,7 @@ module.exports = {
   },
   addcorp: (req, res) => {
     mongoose.connect(
-      process.env.DB_CONNECTION_ONE,
+      process.env.DB_CONNECTION,
       { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
       (err) => {
         let result = {};
