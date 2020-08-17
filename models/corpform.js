@@ -25,4 +25,4 @@ const corpSchema = new Schema({
   questions:"String"
 });
 
-module.exports = mongoose.model("corporate", corpSchema);
+module.exports = mongoose.model("Corporate", corpSchema);
