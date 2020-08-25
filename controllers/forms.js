@@ -12,7 +12,7 @@ module.exports = {
       { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
       (err) => {
         let result = {};
-        let status = 200;
+        let status = 201;
 
         if (!err) {
           const myself = new Myself({
@@ -50,7 +50,7 @@ module.exports = {
       { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
       (err) => {
         let result = {};
-        let status = 200;
+        let status = 201;
 
         if (!err) {
           const family = new Family({
@@ -59,7 +59,7 @@ module.exports = {
             lga: req.body.lgafam,
             hub: req.body.preferredhubfam,
             vaccine: req.body.vaccinefam,
-            time:req.body.timefam,
+            time: req.body.timefam,
             address: req.body.addressfam,
             profile: req.body.profile,
           });
