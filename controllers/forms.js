@@ -4,6 +4,8 @@ const Corporate = require("../models/corpform");
 const mongoose = require("mongoose");
 require("dotenv/config");
 const jwt = require("jsonwebtoken");
+const EmailService = require('../services/emailServices')
+
 
 module.exports = {
   addmy: (req, res) => {
@@ -23,7 +25,6 @@ module.exports = {
             vaccine: req.body.vaccine,
             profile: req.body.profile,
           });
-
           myself.save((err, myself) => {
             if (!err) {
               result.status = status;
@@ -34,7 +35,9 @@ module.exports = {
               result.error = err;
             }
             res.status(status).send(result);
+            
           });
+        
         } else {
           status = 500;
           result.status = status;

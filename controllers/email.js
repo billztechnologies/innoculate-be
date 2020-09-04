@@ -1,29 +1,20 @@
-const http = require('http');
-const nodemailer = require('nodemailer');
+const emailService = require("../services/emailServices");
 
-module.exports={
-    sendmail :(req, res)=>{
-        let transport = nodemailer.createTransport({
-            host: "smtp.mailtrap.io",
-            port: 2525,
-            auth: {
-              user: "89836933fddd68",
-              pass: "2338ec3e09708f"
-            }
-          });
-          let mailOptions = {
-            // should be replaced with real recipient's account
-            to: 'mathildaimadojiemu@gmail.com',
-            subject: req.body.subject,
-            text: req.body.message
-        };
-        transport.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                return console.log(error);
-            }
-            console.log('Message %s sent: %s', info.messageId, info.response);
-        });
-        res.writeHead(200);
-        res.end();
-    }
-}
+module.exports = {
+  email: (req, res) => {
+    const {radioservice, preferredhub, lga, state, profile,vaccine} = req.body;
+    emailService.sendText(
+      ["mahilday17@gmail.com", "tilda.imadojiemu@gmail.com"],
+      "Awesome!",
+      [radioservice, preferredhub, lga, state, profile, vaccine ]
+    )
+      .then(() => {
+        res.status(200).json({message: "Email sent"});
+        console.log("message sent");
+      })
+      .catch(() => {
+        res.status(500).json({ message: "Internal Error" });
+        console.log("Error");
+      });
+  },
+};
