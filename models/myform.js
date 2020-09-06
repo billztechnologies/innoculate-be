@@ -8,10 +8,8 @@ const mySchema = new Schema({
   },
   state: "String",
   lga: "String",
-  preferredhub: "String",
-  vaccine: {
-    type: "Array",
-  },
+  hub: "String",
+  vaccine:[],
   profile: {
     firstname: {
       type: "String",
@@ -45,6 +43,7 @@ const mySchema = new Schema({
       zipcode: "String",
     },
   },
+  paymentStatus: 'String'
 });
 
 module.exports = mongoose.model("Myself", mySchema);

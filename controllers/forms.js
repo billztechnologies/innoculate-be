@@ -22,8 +22,21 @@ module.exports = {
             state: req.body.state,
             lga: req.body.lga,
             hub: req.body.preferredhub,
-            vaccine: req.body.vaccine,
-            profile: req.body.profile,
+            vaccine: req.body.vaccines,
+            paymentStatus: req.body.paymentStatus,
+            profile:{
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            gender: req.body.gender,
+            email: req.body.email,
+            phone: req.body.phone,
+            time: req.body.time,
+            age: req.body.age,
+            address: {
+              address: req.body.address,
+              zipcode: req.body.zipcode
+            }
+            }
           });
           myself.save((err, myself) => {
             if (!err) {
