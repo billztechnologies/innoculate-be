@@ -43,6 +43,8 @@ const mySchema = new Schema({
       zipcode: "String",
     },
   },
+  brandschosen:[],
+  totalprice: 'Number',
   paymentStatus: 'String'
 });
 

@@ -10,7 +10,7 @@ module.exports = {
         async (err) => {
             let result = {};
             let status = 200;
-            let filter = {email: req.body.email}
+            let filter = {"profile.email":req.body.email, "profile.firstname": req.body.firstname, "profile.lastname": req.body.lastname}
             let other ={}
             console.log(filter)
             let update = {paymentStatus: req.body.paymentStatus}
@@ -24,7 +24,7 @@ module.exports = {
             } else{
                 let status = 500;
                 result.status = status
-                result.result = doc
+                result.result = 'done'
             }
             res.status(status).send(result)
         }

@@ -16,7 +16,7 @@ class EmailService {
   sendText(to, subject, text) {
     return new Promise((resolve, reject) => {
       this.emailClient.sendMail({
-        from: '"Matsxript" <mathildaimadojiemu@gmail.com>',
+        from: '"Inocul8" <info@inocul8.com.ng>',
         to,
         subject,
         text,

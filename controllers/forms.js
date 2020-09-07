@@ -24,6 +24,8 @@ module.exports = {
             hub: req.body.preferredhub,
             vaccine: req.body.vaccines,
             paymentStatus: req.body.paymentStatus,
+            totalprice: req.body.totalprice,
+            brandschosen: req.body.brandschosen,
             profile:{
             firstname: req.body.firstname,
             lastname: req.body.lastname,
