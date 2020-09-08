@@ -72,14 +72,15 @@ module.exports = {
 
         if (!err) {
           const family = new Family({
-            place: req.body.radioservice,
+            place: req.body.radioservicefam,
             state: req.body.statefam,
             lga: req.body.lgafam,
             hub: req.body.preferredhubfam,
-            vaccine: req.body.vaccinefam,
             time: req.body.timefam,
             address: req.body.addressfam,
             profile: req.body.profile,
+            totalprice: req.body.totalprice,
+            paymentStatus: req.body.paymentStatus,
           });
 
           family.save((err, family) => {

@@ -9,13 +9,11 @@ const famSchema = new Schema({
   state: "String",
   lga: "String",
   preferredhub: "String",
-  vaccine: {
-    type: "Array",
-    // required: true,
-  },
   address: "String",
-    time:"String",
+  time:"String",
   profile: [{}],
+  totalprice: 'Number',
+  paymentStatus: 'String'
 });
 
 module.exports = mongoose.model("Family", famSchema);
