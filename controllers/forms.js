@@ -140,4 +140,32 @@ module.exports = {
       }
     );
   },
+  getAllMyself: (req, res) => {
+    mongoose.connect(
+      process.env.DB_CONNECTION,
+      { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
+      (err) => {
+        let result = {};
+        let status = 200;
+        if (!err) {
+            Myself.find({}, (err, myself) => {
+              if (!err) {
+                result.status = status;
+                result.error = err;
+                result.result = myself;
+              } else {
+                status = 500;
+                result.status = status;
+                result.error = err;
+              }
+              res.status(status).send(result);
+            });
+          } else {
+            status = 401;
+            result.status = status;
+            result.error = "Get all error";
+            res.status(status).send(result);
+          }
+      })
+    }
 };
