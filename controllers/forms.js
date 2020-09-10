@@ -167,5 +167,61 @@ module.exports = {
             res.status(status).send(result);
           }
       })
-    }
+    },
+    getAllFamily: (req, res) => {
+      mongoose.connect(
+        process.env.DB_CONNECTION,
+        { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
+        (err) => {
+          let result = {};
+          let status = 200;
+          if (!err) {
+              Family.find({}, (err, family) => {
+                if (!err) {
+                  result.status = status;
+                  result.error = err;
+                  result.result = family;
+                } else {
+                  status = 500;
+                  result.status = status;
+                  result.error = err;
+                }
+                res.status(status).send(result);
+              });
+            } else {
+              status = 401;
+              result.status = status;
+              result.error = "Get all error";
+              res.status(status).send(result);
+            }
+        })
+      },
+      getAllCorp: (req, res) => {
+        mongoose.connect(
+          process.env.DB_CONNECTION,
+          { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
+          (err) => {
+            let result = {};
+            let status = 200;
+            if (!err) {
+                Corporate.find({}, (err, corporate) => {
+                  if (!err) {
+                    result.status = status;
+                    result.error = err;
+                    result.result = corporate;
+                  } else {
+                    status = 500;
+                    result.status = status;
+                    result.error = err;
+                  }
+                  res.status(status).send(result);
+                });
+              } else {
+                status = 401;
+                result.status = status;
+                result.error = "Get all error";
+                res.status(status).send(result);
+              }
+          })
+        }
 };

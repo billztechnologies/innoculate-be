@@ -7,6 +7,8 @@ module.exports=(router)=>{
         .get(formController.getAllMyself)
     router.route('/family-form')
         .post(formController.addfam)
+        .get(formController.getAllFamily)
     router.route('/corporate-form')
         .post(formController.addcorp)
+        .get(formController.getAllCorp)
 }
