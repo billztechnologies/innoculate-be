@@ -17,6 +17,8 @@ module.exports = {
             const user = new User({
               name: req.body.name,
               password: hash,
+              role: req.body.role,
+              email:req.body.email
             });
 
             user.save((err, user) => {
@@ -63,7 +65,7 @@ module.exports = {
                     };
                     const options = {
                       expiresIn: "2d",
-                      issuer: "https://inocul8.com",
+                      issuer: "https://inocul8.com.ng",
                     };
                     const secret = process.env.TOKEN_SECRET;
                     const token = jwt.sign(payload, secret, options);
