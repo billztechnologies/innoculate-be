@@ -24,6 +24,7 @@ module.exports = {
             hub: req.body.preferredhub,
             vaccine: req.body.vaccines,
             paymentStatus: req.body.paymentStatus,
+            vaccinationStatus: 'Not Done',
             totalprice: req.body.totalprice,
             brandschosen: req.body.brandschosen,
             profile:{
@@ -81,6 +82,7 @@ module.exports = {
             profile: req.body.profile,
             totalprice: req.body.totalprice,
             paymentStatus: req.body.paymentStatus,
+            vaccinationStatus: 'Not Done'
           });
 
           family.save((err, family) => {
@@ -118,6 +120,7 @@ module.exports = {
             phone: req.body.phone,
             questions: req.body.questions,
             companyDetails: req.body.companydetails,
+            vaccinationStatus: 'Not Done',
           });
 
           corporate.save((err, corporate) => {

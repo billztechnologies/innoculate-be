@@ -45,7 +45,8 @@ const mySchema = new Schema({
   },
   brandschosen:[],
   totalprice: 'Number',
-  paymentStatus: 'String'
+  paymentStatus: 'String',
+  vaccinationStatus: 'String'
 });
 
 module.exports = mongoose.model("Myself", mySchema);

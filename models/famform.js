@@ -13,7 +13,8 @@ const famSchema = new Schema({
   time:"String",
   profile: [{}],
   totalprice: 'Number',
-  paymentStatus: 'String'
+  paymentStatus: 'String',
+  vaccinationStatus: 'String'
 });
 
 module.exports = mongoose.model("Family", famSchema);

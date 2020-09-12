@@ -22,7 +22,8 @@ const corpSchema = new Schema({
     type:Object,
     required:true
   },
-  questions:"String"
+  questions:"String",
+  vaccinationStatus: 'String'
 });
 
 module.exports = mongoose.model("Corporate", corpSchema);
