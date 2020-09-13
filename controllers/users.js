@@ -139,4 +139,32 @@ module.exports = {
       }
     );
   },
+  getNurse: (req, res) =>{
+    mongoose.connect(
+      process.env.DB_CONNECTION,
+      { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
+      (err) => {
+        let result = {};
+        let status = 200;
+        if (!err) {
+          User.find({role: 'nurse'}, (err, users) => {
+            if (!err) {
+              result.status = status;
+              result.error = err;
+              result.result = users;
+            } else {
+              status = 500;
+              result.status = status;
+              result.error = err;
+            }
+            res.status(status).send(result);
+          });
+        } else {
+          status = 500;
+          result.status = status;
+          result.error = err;
+          res.status(status).send(result);
+        }
+      })
+  }
 };

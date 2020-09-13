@@ -26,7 +26,8 @@ const userSchema = new Schema({
     role:{
         type:'String',
         required:true
-    }
+    },
+    bookings: []
 });
 
 userSchema.pre("save", (next)=>{
