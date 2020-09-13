@@ -102,13 +102,24 @@ module.exports = {
                   let result = {};
                   let status = 200;
                   let filter = {"name":req.body.name, "email": req.body.email, "state": req.body.state, "localgovt": req.body.localgovt}
+                  let newassigned_id = req.body.newassigned_id
                   console.log(filter)
-                  let update = {bookings: req.body.bookings}
+                 
                   if(!err){
-                     let nurse = await User.findOneAndUpdate(filter, update, {
+                    let assigned = await Myself.findByIdAndUpdate(newassigned_id, {vaccinationStatus: 'assigned'},{
+                        new: true
+                    }, function(err, booking){ 
+                         return booking
+                      });
+                    assigned.save()
+                    console.log(assigned)
+                     let nurse = await User.findOneAndUpdate(filter, {$push:{bookings: assigned}}, {
                           new: true
                       })
-                      if(nurse !== null){nurse.save()} else{console.log(null)}
+                      
+                      if(nurse !== null){
+                          nurse.save()
+                        } else{console.log(null)}
                       
                       console.log(nurse)
                   } else{
