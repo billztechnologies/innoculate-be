@@ -35,6 +35,7 @@ const userSchema = new Schema({
         type:'String',
         required: true
     },
+    newassigned_id: '',
     bookings: []
 });
 

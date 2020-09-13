@@ -20,7 +20,8 @@ module.exports = {
               role: req.body.role,
               email:req.body.email,
               state: req.body.state,
-              localgovt: req.body.localgovt
+              localgovt: req.body.localgovt,
+              newassigned_id: req.body.newassigned_id
             });
 
             user.save((err, user) => {
