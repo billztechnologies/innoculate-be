@@ -18,7 +18,9 @@ module.exports = {
               name: req.body.name,
               password: hash,
               role: req.body.role,
-              email:req.body.email
+              email:req.body.email,
+              state: req.body.state,
+              localgovt: req.body.localgovt
             });
 
             user.save((err, user) => {

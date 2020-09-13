@@ -24,7 +24,7 @@ module.exports = {
             hub: req.body.preferredhub,
             vaccine: req.body.vaccines,
             paymentStatus: req.body.paymentStatus,
-            vaccinationStatus: 'Not Done',
+            vaccinationStatus: 'unassigned',
             totalprice: req.body.totalprice,
             brandschosen: req.body.brandschosen,
             profile:{
@@ -82,7 +82,7 @@ module.exports = {
             profile: req.body.profile,
             totalprice: req.body.totalprice,
             paymentStatus: req.body.paymentStatus,
-            vaccinationStatus: 'Not Done'
+            vaccinationStatus: 'unassigned'
           });
 
           family.save((err, family) => {
@@ -120,7 +120,7 @@ module.exports = {
             phone: req.body.phone,
             questions: req.body.questions,
             companyDetails: req.body.companydetails,
-            vaccinationStatus: 'Not Done',
+            vaccinationStatus: 'unassigned',
           });
 
           corporate.save((err, corporate) => {
@@ -166,7 +166,7 @@ module.exports = {
           } else {
             status = 401;
             result.status = status;
-            result.error = "Get all error";
+            result.error = err;
             res.status(status).send(result);
           }
       })
@@ -194,7 +194,7 @@ module.exports = {
             } else {
               status = 401;
               result.status = status;
-              result.error = "Get all error";
+              result.error = err;
               res.status(status).send(result);
             }
         })
@@ -222,7 +222,7 @@ module.exports = {
               } else {
                 status = 401;
                 result.status = status;
-                result.error = "Get all error";
+                result.error = err;
                 res.status(status).send(result);
               }
           })
