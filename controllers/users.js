@@ -21,7 +21,8 @@ module.exports = {
               email:req.body.email,
               state: req.body.state,
               localgovt: req.body.localgovt,
-              newassigned_id: req.body.newassigned_id
+              newassigned_id: req.body.newassigned_id,
+              done: true
             });
 
             user.save((err, user) => {
@@ -150,7 +151,7 @@ module.exports = {
         let result = {};
         let status = 200;
         if (!err) {
-          User.find({role: 'nurse', "bookings": []}, (err, users) => {
+          User.find({role: 'nurse', done: true}, (err, users) => {
             if (!err) {
               result.status = status;
               result.error = err;
