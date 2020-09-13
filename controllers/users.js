@@ -150,7 +150,7 @@ module.exports = {
         let result = {};
         let status = 200;
         if (!err) {
-          User.find({role: 'nurse'}, (err, users) => {
+          User.find({role: 'nurse', "bookings": []}, (err, users) => {
             if (!err) {
               result.status = status;
               result.error = err;
