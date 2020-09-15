@@ -48,7 +48,7 @@ module.exports = {
   },
 
   login: (req, res) => {
-    const { name, password } = req.body;
+    const { email, password } = req.body;
     mongoose.connect(
       process.env.DB_CONNECTION,
       { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
@@ -57,14 +57,14 @@ module.exports = {
         let status = 200;
 
         if (!err) {
-          User.findOne({ name }, (err, user) => {
+          User.findOne({ email }, (err, user) => {
             if (!err && user) {
               bcrypt
                 .compare(password, user.password)
                 .then((match) => {
                   if (match) {
                     const payload = {
-                      name: user.name,
+                      email: user.email,
                       password: user.password,
                     };
                     const options = {
