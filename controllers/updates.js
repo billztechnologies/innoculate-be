@@ -51,12 +51,13 @@ module.exports = {
                   if(doc !== null){doc.save()} else{console.log(null)}
                   
                   console.log(doc)
+                  res.status(status).send(result)
               } else{
                   let status = 500;
                   result.status = status
                   result.result = 'done'
               }
-              res.status(status).send(result)
+             
           }
         ).catch((err)=>{
             console.log('Error', err)
@@ -70,9 +71,6 @@ module.exports = {
           async (err) => {
               let result = {};
               let status = 200;
-              let firstfilt =[]
-              let lastfilt =[]
-              let email = []
             
               let filter = {"profile.firstname": req.body.profile[0].firstname, "profile.lastname": req.body.profile[0].lastname, "profile.email": req.body.profile[0].email, "profile.phone": req.body.profile[0].phone}
               console.log(filter)
@@ -84,12 +82,12 @@ module.exports = {
                   if(doc !== null){doc.save()} else{console.log(null)}
                   
                   console.log(doc)
+                  res.status(status).send(result)
               } else{
                   let status = 500;
                   result.status = status
-                  result.result = 'done'
+                  result.result = err
               }
-              res.status(status).send(result)
           }
         ).catch((err)=>{
             console.log('Error', err)

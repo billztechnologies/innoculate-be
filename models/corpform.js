@@ -6,6 +6,11 @@ const corpSchema = new Schema({
     type: "String",
     required: true,
   },
+  type:{
+    type:"String",
+    required: true,
+    trim: true
+  },
 
   email: {
     type: "String",

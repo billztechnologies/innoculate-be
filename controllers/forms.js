@@ -18,11 +18,15 @@ module.exports = {
 
         if (!err) {
           const myself = new Myself({
+            type: 'individual',
             place: req.body.radioservice,
             state: req.body.state,
             lga: req.body.lga,
             hub: req.body.preferredhub,
             vaccine: req.body.vaccines,
+            vaccinator:req.body.vaccinator,
+            date: req.body.date,
+            dosageStatus: req.body.dosageStatus,
             paymentStatus: req.body.paymentStatus,
             vaccinationStatus: 'unassigned',
             totalprice: req.body.totalprice,
@@ -73,6 +77,7 @@ module.exports = {
 
         if (!err) {
           const family = new Family({
+            type: 'family',
             place: req.body.radioservicefam,
             state: req.body.statefam,
             lga: req.body.lgafam,
@@ -115,6 +120,7 @@ module.exports = {
 
         if (!err) {
           const corporate = new Corporate({
+            type: 'corporate',
             fullname: req.body.fullname,
             email: req.body.email,
             phone: req.body.phone,

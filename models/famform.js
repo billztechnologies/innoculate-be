@@ -6,6 +6,11 @@ const famSchema = new Schema({
     type: "String",
     // required: true,
   },
+  type:{
+    type:"String",
+    required: true,
+    trim: true
+  },
   state: "String",
   lga: "String",
   preferredhub: "String",

@@ -6,6 +6,11 @@ const mySchema = new Schema({
     type: "String",
     required: true,
   },
+  type:{
+    type:"String",
+    required: true,
+    trim: true
+  },
   state: "String",
   lga: "String",
   hub: "String",
@@ -46,7 +51,10 @@ const mySchema = new Schema({
   brandschosen:[],
   totalprice: 'Number',
   paymentStatus: 'String',
-  vaccinationStatus: 'String'
+  vaccinationStatus: 'String',
+  vaccinator:'String',
+  date: "Buffer",
+  dosageStage:"String",
 });
 
 module.exports = mongoose.model("Myself", mySchema);
