@@ -1,5 +1,6 @@
 const Vaccine = require("../models/vaccines");
 const mongoose = require("mongoose");
+const Myself = require('../models/myform')
 require("dotenv/config");
 
 module.exports = {
@@ -67,4 +68,35 @@ module.exports = {
       }
     );
   },
+  myselfVacc: (req, res)=>{
+    mongoose.connect(
+      process.env.DB_CONNECTION,
+      { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
+      (err) => {
+        let result = {};
+        let status = 200;
+
+        if (!err) {
+          Myself.find({'_id':{$in: req.body.bookings}}, (err, vaccines) => {
+            if (!err) {
+              result.status = status;
+              result.error = err;
+              result.result = vaccines
+              console.log(vaccines)
+            } else {
+              status = 500;
+              result.status = status;
+              result.error = err;
+            }
+            res.status(status).send(result);
+          });
+        } else {
+          status = 500;
+          result.status = status;
+          result.error = err;
+          res.status(status).send(result);
+        }
+      }
+    );
+  }
 };
