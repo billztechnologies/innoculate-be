@@ -53,8 +53,8 @@ const mySchema = new Schema({
   paymentStatus: 'String',
   vaccinationStatus: 'String',
   vaccinator:'String',
-  date: "Buffer",
-  dosageStage:"String",
+  startDate: "String",
+  dosageNumber: "Number"
 });
 
 module.exports = mongoose.model("Myself", mySchema);

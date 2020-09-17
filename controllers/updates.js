@@ -111,7 +111,7 @@ module.exports = {
                       });
                     assigned.save()
                     console.log(assigned)
-                     let nurse = await User.findOneAndUpdate(filter, {$push:{bookings: newassigned_id}}, {
+                     let nurse = await User.findOneAndUpdate(filter, {$push:{bookings: newassigned_id}, done: 'not done'}, {
                           new: true
                       })
                       
@@ -130,4 +130,33 @@ module.exports = {
             ).catch((err)=>{
                 console.log('Error', err)
             })},
+    updateMyself: (req, res)=>{
+        mongoose.connect(
+            process.env.DB_CONNECTION,
+            { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true, useFindAndModify: false },
+            async (err) => {
+                let result = {};
+                let status = 200;
+                let filter = {"_id": req.body._id}
+                let newassigned_id = req.body.newassigned_id
+                console.log(filter)
+               
+                if(!err){
+                  let assigned = await Myself.findByIdAndUpdate(filter, req.body,{
+                      new: true
+                  }, function(err, booking){ 
+                       return booking
+                    });
+                  assigned.save()
+                } else{
+                    let status = 500;
+                    result.status = status
+                    result.result = 'done'
+                } 
+                res.status(status).send(result)
+            }
+          ).catch((err)=>{
+              console.log('Error', err)
+          })
+    }
 }

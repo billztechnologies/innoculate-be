@@ -37,7 +37,7 @@ const userSchema = new Schema({
     },
     newassigned_id: '',
     bookings: [],
-    done: 'Boolean'
+    done: 'String'
 });
 
 userSchema.pre("save", (next)=>{

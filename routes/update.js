@@ -9,4 +9,6 @@ module.exports = (router)=>{
         .put(updateController.updateNurseBooking)
     router.route('/updatefam')
         .put(updateController.updateFam)
+    router.route('/updatenursemyself')
+        .put(updateController.updateMyself)
 }
