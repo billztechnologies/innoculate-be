@@ -111,7 +111,7 @@ module.exports = {
                       });
                     assigned.save()
                     console.log(assigned)
-                     let nurse = await User.findOneAndUpdate(filter, {$push:{bookings: newassigned_id}, done: false}, {
+                     let nurse = await User.findOneAndUpdate(filter, {$push:{bookings: newassigned_id}}, {
                           new: true
                       })
                       
