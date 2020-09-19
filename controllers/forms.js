@@ -87,7 +87,10 @@ module.exports = {
             profile: req.body.profile,
             totalprice: req.body.totalprice,
             paymentStatus: req.body.paymentStatus,
-            vaccinationStatus: 'unassigned'
+            vaccinationStatus: 'unassigned',
+            vaccinator:req.body.vaccinator,
+            startDate: req.body.date,
+            dosageNumber: req.body.dosageNumber,
           });
 
           family.save((err, family) => {
@@ -127,6 +130,9 @@ module.exports = {
             questions: req.body.questions,
             companyDetails: req.body.companydetails,
             vaccinationStatus: 'unassigned',
+            vaccinator:req.body.vaccinator,
+            startDate: req.body.date,
+            dosageNumber: req.body.dosageNumber,
           });
 
           corporate.save((err, corporate) => {

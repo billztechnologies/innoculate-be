@@ -28,7 +28,14 @@ const corpSchema = new Schema({
     required:true
   },
   questions:"String",
-  vaccinationStatus: 'String'
+  vaccinationStatus: 'String',
+  vaccinator:{
+    type: Number
+  },
+  startDate: "String",
+  dosageNumber: {
+    type: Number
+  }
 });
 
 module.exports = mongoose.model("Corporate", corpSchema);
