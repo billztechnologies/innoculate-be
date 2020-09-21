@@ -8,7 +8,7 @@ module.exports ={
             const token = req.headers.authorization.split(' ')[1];
             const options = {
                 expiresIn: '2d',
-                issuer: 'https://inocul8.com'
+                issuer: 'https://inocul8.com.ng'
             };
             try{
                 result = jwt.verify(token, process.env.TOKEN_SECRET, options);

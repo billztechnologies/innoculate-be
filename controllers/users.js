@@ -115,7 +115,7 @@ module.exports = {
         if (!err) {
           const payload = req.decoded;
           console.log("PAYLOAD", payload);
-          if (payload && payload.name === "admin") {
+          if (payload && payload.role === "admin") {
             User.find({}, (err, users) => {
               if (!err) {
                 result.status = status;

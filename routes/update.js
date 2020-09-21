@@ -10,4 +10,5 @@ module.exports = (router) => {
     .put(updateController.updateNurseCorpBooking);
   router.route("/updatefam").put(updateController.updateFam);
   router.route("/updatenursemyself").put(updateController.updateMyself);
+  router.route("/updatenursefam").put(updateController.updateFamEdit);
 };

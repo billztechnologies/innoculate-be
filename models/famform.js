@@ -20,13 +20,9 @@ const famSchema = new Schema({
   totalprice: {
     type: Number
   },
-  paymentStatus: 'String',
   vaccinationStatus: 'String',
+  paymentStatus: 'String',
   vaccinator:'String',
-  startDate: "String",
-  dosageNumber: {
-    type: Number
-  }
 });
 
 module.exports = mongoose.model("Family", famSchema);

@@ -90,7 +90,6 @@ module.exports = {
             vaccinationStatus: 'unassigned',
             vaccinator:req.body.vaccinator,
             startDate: req.body.date,
-            dosageNumber: req.body.dosageNumber,
           });
 
           family.save((err, family) => {
