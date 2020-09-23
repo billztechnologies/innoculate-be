@@ -237,5 +237,37 @@ module.exports = {
                 res.status(status).send(result);
               }
           })
-        }
+        },
+        getAllStarted: (req, res) => {
+          mongoose.connect(
+            process.env.DB_CONNECTION,
+            { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
+            (err) => {
+              let result = {};
+              let status = 200;
+              if (!err) {
+                  Myself.find({
+                    $text: {
+                      $search: "started"
+                  }
+                  }, (err, started) => {
+                    if (!err) {
+                      result.status = status;
+                      result.error = err;
+                      result.result = started;
+                    } else {
+                      status = 500;
+                      result.status = status;
+                      result.error = err;
+                    }
+                    res.status(status).send(result);
+                  });
+                } else {
+                  status = 401;
+                  result.status = status;
+                  result.error = err;
+                  res.status(status).send(result);
+                }
+            })
+          }
 };

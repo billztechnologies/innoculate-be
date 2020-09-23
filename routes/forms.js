@@ -11,4 +11,6 @@ module.exports=(router)=>{
     router.route('/corporate-form')
         .post(formController.addcorp)
         .get(formController.getAllCorp)
+    router.route('/getstarted')
+        .get(formController.getAllStarted)
 }

@@ -8,5 +8,7 @@ module.exports = (router) => {
     .get(validateToken, userController.getUsers);
   router.route('/nurses')
     .get(userController.getNurse)
+    router.route('/allnurses')
+    .get(userController.getAllNurse)
   router.route("/login").post(userController.login);
 };
