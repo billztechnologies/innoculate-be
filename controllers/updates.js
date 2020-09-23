@@ -2,6 +2,7 @@ const Myself = require("../models/myform");
 const mongoose = require("mongoose");
 const Family = require("../models/famform");
 const Corporate = require("../models/corpform");
+const Vaccine = require("../models/vaccines")
 const User = require("../models/users");
 
 module.exports = {
@@ -403,6 +404,46 @@ module.exports = {
 
           if (!err) {
             let assigned = await Family.findByIdAndUpdate(
+              filter,
+              req.body,
+              {
+                new: true,
+              },
+              function (err, booking) {
+                return booking;
+              }
+            );
+            assigned.save();
+          } else {
+            let status = 500;
+            result.status = status;
+            result.result = "done";
+          }
+          res.status(status).send(result);
+        }
+      )
+      .catch((err) => {
+        console.log("Error", err);
+      });
+  },
+  updateVacc: (req, res) => {
+    mongoose
+      .connect(
+        process.env.DB_CONNECTION,
+        {
+          useNewUrlParser: true,
+          useCreateIndex: true,
+          useUnifiedTopology: true,
+          useFindAndModify: false,
+        },
+        async (err) => {
+          let result = {};
+          let status = 200;
+          let filter = { _id: req.body._id };
+          console.log(filter);
+
+          if (!err) {
+            let assigned = await Vaccine.findByIdAndUpdate(
               filter,
               req.body,
               {
