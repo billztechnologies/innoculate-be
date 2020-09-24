@@ -39,7 +39,10 @@ const userSchema = new Schema({
     done: {
         type: Boolean
     },
-    timestamp: ''
+    timestamp: {
+        type: Date,
+        required: true
+    }
 
 });
 

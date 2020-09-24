@@ -24,7 +24,7 @@ const famSchema = new Schema({
   paymentStatus: 'String',
   vaccinator:'String',
   timestamp: {
-    type: 'String',
+    type: Date,
     required: true
   }
 });

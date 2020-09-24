@@ -56,7 +56,7 @@ const mySchema = new Schema({
   startDate: "String",
   dosageNumber: "Number",
   timestamp: {
-    type: 'String',
+    type: Date,
     required: true
   }
 });

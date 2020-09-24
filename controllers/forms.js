@@ -165,7 +165,7 @@ module.exports = {
         let result = {};
         let status = 200;
         if (!err) {
-            Myself.find({}, (err, myself) => {
+            Myself.find({},  {sort: {timestamp: descending}}, (err, myself) => {
               if (!err) {
                 result.status = status;
                 result.error = err;
@@ -193,7 +193,7 @@ module.exports = {
           let result = {};
           let status = 200;
           if (!err) {
-              Family.find({}, (err, family) => {
+              Family.find({},  {sort: {timestamp: -1}}, (err, family) => {
                 if (!err) {
                   result.status = status;
                   result.error = err;
@@ -221,7 +221,7 @@ module.exports = {
             let result = {};
             let status = 200;
             if (!err) {
-                Corporate.find({}, (err, corporate) => {
+                Corporate.find({},  {sort: {timestamp: -1}},(err, corporate) => {
                   if (!err) {
                     result.status = status;
                     result.error = err;

@@ -37,7 +37,7 @@ const corpSchema = new Schema({
     type: Number
   },
   timestamp: {
-    type: 'String',
+    type: Date,
     required: true
   }
 });
