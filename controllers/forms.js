@@ -31,7 +31,7 @@ module.exports = {
             vaccinationStatus: 'unassigned',
             totalprice: req.body.totalprice,
             brandschosen: req.body.brandschosen,
-            timestamp: new Date(),
+            timestamp: new Date().toISOString(),
             profile:{
             firstname: req.body.firstname,
             lastname: req.body.lastname,
@@ -89,7 +89,7 @@ module.exports = {
             totalprice: req.body.totalprice,
             paymentStatus: req.body.paymentStatus,
             vaccinationStatus: 'unassigned',
-            timestamp: new Date(),
+            timestamp: new Date().toISOString(),
             vaccinator:req.body.vaccinator,
             startDate: req.body.date,
           });
@@ -131,7 +131,7 @@ module.exports = {
             questions: req.body.questions,
             companyDetails: req.body.companydetails,
             vaccinationStatus: 'unassigned',
-            timestamp: new Date(),
+            timestamp: new Date().toISOString(),
             vaccinator:req.body.vaccinator,
             startDate: req.body.date,
             dosageNumber: req.body.dosageNumber,

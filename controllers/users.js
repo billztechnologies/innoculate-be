@@ -22,7 +22,8 @@ module.exports = {
               state: req.body.state,
               localgovt: req.body.localgovt,
               newassigned_id: req.body.newassigned_id,
-              done: true
+              done: true,
+              timestamp: new Date().toISOString()
             });
 
             user.save((err, user) => {

@@ -38,7 +38,9 @@ const userSchema = new Schema({
     bookings: [],
     done: {
         type: Boolean
-    }
+    },
+    timestamp: ''
+
 });
 
 userSchema.pre("save", (next)=>{
