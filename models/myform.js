@@ -54,7 +54,11 @@ const mySchema = new Schema({
   vaccinationStatus: 'String',
   vaccinator:'String',
   startDate: "String",
-  dosageNumber: "Number"
+  dosageNumber: "Number",
+  timestamp: {
+    type: 'String',
+    required: true
+  }
 });
 
 module.exports = mongoose.model("Myself", mySchema);

@@ -35,6 +35,10 @@ const corpSchema = new Schema({
   startDate: "String",
   dosageNumber: {
     type: Number
+  },
+  timestamp: {
+    type: 'String',
+    required: true
   }
 });
 

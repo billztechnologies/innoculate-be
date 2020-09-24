@@ -23,6 +23,10 @@ const famSchema = new Schema({
   vaccinationStatus: 'String',
   paymentStatus: 'String',
   vaccinator:'String',
+  timestamp: {
+    type: 'String',
+    required: true
+  }
 });
 
 module.exports = mongoose.model("Family", famSchema);
