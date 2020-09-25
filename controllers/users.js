@@ -3,7 +3,6 @@ const User = require("../models/users");
 require("dotenv/config");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const jwtDecode = require('jwt-decode')
 
 module.exports = {
   add: (req, res) => {
