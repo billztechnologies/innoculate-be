@@ -11,4 +11,5 @@ module.exports = (router) => {
     router.route('/allnurses')
     .get(userController.getAllNurse)
   router.route("/login").post(userController.login);
+  router.route("/login-local").post(userController.loginLocal);
 };

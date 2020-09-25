@@ -3,6 +3,7 @@ const User = require("../models/users");
 require("dotenv/config");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const jwtDecode = require('jwt-decode')
 
 module.exports = {
   add: (req, res) => {
@@ -47,7 +48,46 @@ module.exports = {
       }
     );
   },
-
+  loginLocal: (req, res) => {
+    const payload= req.body
+    console.log(payload)
+    
+    mongoose.connect(
+      process.env.DB_CONNECTION,
+      { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
+      (err) => {
+        let result = {};
+        let status = 200;
+        const {id, email, role} = payload
+        console.log(id, email)
+        if (!err) {
+          User.findOne({_id: id }, (err, user) => {
+            console.log(user)
+            if (!err && user) {
+                    result.message = "Auth success";
+                    result.status = 200;
+                    result.result = user;
+                  } else {
+                    status = 401;
+                    result.status = status;
+                    result.error = "Authentication error";
+                  }
+                  res.status(status).send(result);
+                })
+                .catch((err) => {
+                  status = 500;
+                  result.status = status;
+                  result.error = err;
+                  res.status(status).send(result);
+                });
+            } else {
+              status = 404;
+              result.status = status;
+              result.error = err;
+              res.status(status).send(result);
+            }
+          });
+        },
   login: (req, res) => {
     const { email, password } = req.body;
     mongoose.connect(
@@ -66,7 +106,8 @@ module.exports = {
                   if (match) {
                     const payload = {
                       email: user.email,
-                      password: user.password,
+                      id: user._id,
+                      role: user.role
                     };
                     const options = {
                       expiresIn: "2d",
