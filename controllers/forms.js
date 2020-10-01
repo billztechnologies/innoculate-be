@@ -278,4 +278,90 @@ module.exports = {
       }
     );
   },
+  // Amount/ income made overtime
+
+  getIncome: (req, res) => {
+    mongoose.connect(
+      process.env.DB_CONNECTION,
+      { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
+      async (err) => {
+        let result = {};
+        let status = 200;
+        let total = null;
+        let mytotal = [];
+        let famtotal = [];
+        if (!err) {
+          myprices = [];
+          famprices = [];
+          let mytotal = await Myself.find(
+            { paymentStatus: "paid" },
+            (err, myself) => {
+              myself.forEach((booking) => {
+                myprices.push(booking.totalprice);
+              });
+            }
+          );
+          let famtotal = await Family.find(
+            { paymentStatus: "paid" },
+            (err, family) => {
+              family.forEach((booking) => {
+                famprices.push(booking.totalprice);
+              });
+            }
+          );
+          total = myprices.concat(famprices);
+          result.result = total;
+          res.status(status).send(result);
+        } else {
+          status = 500;
+          result.status = status;
+          result.error = err;
+          res.status(status).send(result);
+        }
+      }
+    );
+  },
+  // total  number of shots/dosages that have been given
+  getShots: (req, res) => {
+    mongoose.connect(
+      process.env.DB_CONNECTION,
+      { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
+      async (err) => {
+        let result = {};
+        let status = 200;
+        let total = null;
+        if (!err) {
+          myshots = [];
+          famshots = [];
+          let Myshots = await Myself.find({}, (err, myself) => {
+            myself.forEach((booking) => {
+              booking.vaccine.forEach((vacc) => {
+                myshots.push(vacc.eachdose.length);
+              });
+            });
+          });
+          let famtotal = await Family.find(
+            { paymentStatus: "paid" },
+            (err, family) => {
+              family.forEach((booking) => {
+                booking.profile.forEach((prof) => {
+                  prof.vaccines.forEach((dose) => {
+                    famshots.push(dose.eachdose.length);
+                  });
+                });
+              });
+            }
+          );
+          total = myshots.concat(famshots);
+          result.result = total;
+          res.status(status).send(result);
+        } else {
+          status = 500;
+          result.status = status;
+          result.error = err;
+          res.status(status).send(result);
+        }
+      }
+    );
+  },
 };

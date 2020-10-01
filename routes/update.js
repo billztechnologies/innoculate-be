@@ -11,5 +11,6 @@ module.exports = (router) => {
   router.route("/updatefam").put(updateController.updateFam);
   router.route("/updatenursemyself").put(updateController.updateMyself);
   router.route("/updatenursefam").put(updateController.updateFamEdit);
-  router.route("/updatevacc").put(updateController.updateVacc)
+  router.route("/updatevacc").put(updateController.updateVacc);
+  router.route("/deletevacc/:id").delete(updateController.deleteVacc);
 };

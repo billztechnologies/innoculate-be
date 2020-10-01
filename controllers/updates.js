@@ -2,7 +2,7 @@ const Myself = require("../models/myform");
 const mongoose = require("mongoose");
 const Family = require("../models/famform");
 const Corporate = require("../models/corpform");
-const Vaccine = require("../models/vaccines")
+const Vaccine = require("../models/vaccines");
 const User = require("../models/users");
 
 module.exports = {
@@ -20,7 +20,7 @@ module.exports = {
           let result = {};
           let status = 200;
           let filter = {
-            "_id": req.body._id
+            _id: req.body._id,
           };
           let other = {};
           console.log(filter);
@@ -29,8 +29,8 @@ module.exports = {
             let doc = await Myself.findOneAndUpdate(filter, update, {
               new: true,
             });
-              doc.save();
-    
+            doc.save();
+
             console.log(doc);
           } else {
             let status = 500;
@@ -58,7 +58,7 @@ module.exports = {
           let result = {};
           let status = 200;
           let filter = {
-            "_id": req.body._id
+            _id: req.body._id,
           };
           let other = {};
           console.log(filter);
@@ -67,9 +67,8 @@ module.exports = {
             let doc = await Myself.findOneAndUpdate(filter, update, {
               new: true,
             });
-         
-              doc.save();
-           
+
+            doc.save();
 
             console.log(doc);
             res.status(status).send(result);
@@ -108,8 +107,8 @@ module.exports = {
             let doc = await Family.findOneAndUpdate(filter, update, {
               new: true,
             });
-           
-              doc.save();
+
+            doc.save();
 
             console.log(doc);
             res.status(status).send(result);
@@ -448,5 +447,38 @@ module.exports = {
       .catch((err) => {
         console.log("Error", err);
       });
-  }
+  },
+  // delete a specific vaccine
+  deleteVacc: (req, res) => {
+    mongoose
+      .connect(
+        process.env.DB_CONNECTION,
+        {
+          useNewUrlParser: true,
+          useCreateIndex: true,
+          useUnifiedTopology: true,
+          useFindAndModify: false,
+        },
+        async (err) => {
+          let result = {};
+          let status = 200;
+          let filter = { _id: req.params.id };
+          console.log(filter);
+
+          if (!err) {
+            Vaccine.findOneAndRemove(filter, function (err, vaccine) {
+              return vaccine;
+            });
+          } else {
+            let status = 500;
+            result.status = status;
+            result.result = err;
+          }
+          res.status(status).send(result);
+        }
+      )
+      .catch((err) => {
+        console.log("Error", err);
+      });
+  },
 };
