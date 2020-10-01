@@ -20,9 +20,7 @@ module.exports = {
           let result = {};
           let status = 200;
           let filter = {
-            "profile.email": req.body.email,
-            "profile.firstname": req.body.firstname,
-            "profile.lastname": req.body.lastname,
+            "_id": req.body._id
           };
           let other = {};
           console.log(filter);
@@ -31,12 +29,8 @@ module.exports = {
             let doc = await Myself.findOneAndUpdate(filter, update, {
               new: true,
             });
-            if (doc !== null) {
               doc.save();
-            } else {
-              console.log(null);
-            }
-
+    
             console.log(doc);
           } else {
             let status = 500;
@@ -64,9 +58,7 @@ module.exports = {
           let result = {};
           let status = 200;
           let filter = {
-            "profile.email": req.body.profile.email,
-            "profile.firstname": req.body.profile.firstname,
-            "profile.lastname": req.body.profile.lastname,
+            "_id": req.body._id
           };
           let other = {};
           console.log(filter);
@@ -75,11 +67,9 @@ module.exports = {
             let doc = await Myself.findOneAndUpdate(filter, update, {
               new: true,
             });
-            if (doc !== null) {
+         
               doc.save();
-            } else {
-              console.log(null);
-            }
+           
 
             console.log(doc);
             res.status(status).send(result);
@@ -111,10 +101,6 @@ module.exports = {
 
           let filter = {
             _id: req.body._id,
-            "profile.firstname": req.body.profile[0].firstname,
-            "profile.lastname": req.body.profile[0].lastname,
-            "profile.email": req.body.profile[0].email,
-            "profile.phone": req.body.profile[0].phone,
           };
           console.log(filter);
           let update = { paymentStatus: req.body.paymentStatus };
@@ -122,11 +108,8 @@ module.exports = {
             let doc = await Family.findOneAndUpdate(filter, update, {
               new: true,
             });
-            if (doc !== null) {
+           
               doc.save();
-            } else {
-              console.log(null);
-            }
 
             console.log(doc);
             res.status(status).send(result);

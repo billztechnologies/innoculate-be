@@ -62,28 +62,29 @@ module.exports = {
         if (!err) {
           User.findOne({_id: id }, (err, user) => {
             console.log(user)
-            if (!err && user) {
+              if (!err && user) {
                     result.message = "Auth success";
                     result.status = 200;
                     result.result = user;
+                    res.status(status).send(result);
                   } else {
                     status = 401;
                     result.status = status;
                     result.error = "Authentication error";
+                    res.status(status).send(result);
                   }
-                  res.status(status).send(result);
                 })
                 .catch((err) => {
                   status = 500;
                   result.status = status;
                   result.error = err;
-                  res.status(status).send(result);
+                  res.status(status).send(err);
                 });
             } else {
               status = 404;
               result.status = status;
               result.error = err;
-              res.status(status).send(result);
+              res.status(status).send(err);
             }
           });
         },
@@ -128,13 +129,13 @@ module.exports = {
                   status = 500;
                   result.status = status;
                   result.error = err;
-                  res.status(status).send(result);
+                  res.status(status).send(err);
                 });
             } else {
               status = 404;
               result.status = status;
               result.error = err;
-              res.status(status).send(result);
+              res.status(status).send(err);
             }
           });
         } else {
