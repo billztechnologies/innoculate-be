@@ -4,8 +4,7 @@ const Corporate = require("../models/corpform");
 const mongoose = require("mongoose");
 require("dotenv/config");
 const jwt = require("jsonwebtoken");
-const EmailService = require('../services/emailServices')
-
+const EmailService = require("../services/emailServices");
 
 module.exports = {
   addmy: (req, res) => {
@@ -18,33 +17,30 @@ module.exports = {
 
         if (!err) {
           const myself = new Myself({
-            type: 'individual',
+            type: "individual",
             place: req.body.radioservice,
             state: req.body.state,
             lga: req.body.lga,
             hub: req.body.preferredhub,
             vaccine: req.body.vaccines,
-            vaccinator:req.body.vaccinator,
-            startDate: req.body.date,
-            dosageNumber: req.body.dosageNumber,
             paymentStatus: req.body.paymentStatus,
-            vaccinationStatus: 'unassigned',
+            vaccinationStatus: "unassigned",
             totalprice: req.body.totalprice,
             brandschosen: req.body.brandschosen,
             timestamp: new Date().toISOString(),
-            profile:{
-            firstname: req.body.firstname,
-            lastname: req.body.lastname,
-            gender: req.body.gender,
-            email: req.body.email,
-            phone: req.body.phone,
-            time: req.body.time,
-            age: req.body.age,
-            address: {
-              address: req.body.address,
-              zipcode: req.body.zipcode
-            }
-            }
+            profile: {
+              firstname: req.body.firstname,
+              lastname: req.body.lastname,
+              gender: req.body.gender,
+              email: req.body.email,
+              phone: req.body.phone,
+              time: req.body.time,
+              age: req.body.age,
+              address: {
+                address: req.body.address,
+                zipcode: req.body.zipcode,
+              },
+            },
           });
           myself.save((err, myself) => {
             if (!err) {
@@ -56,9 +52,7 @@ module.exports = {
               result.error = err;
             }
             res.status(status).send(result);
-            
           });
-        
         } else {
           status = 500;
           result.status = status;
@@ -78,7 +72,7 @@ module.exports = {
 
         if (!err) {
           const family = new Family({
-            type: 'family',
+            type: "family",
             place: req.body.radioservicefam,
             state: req.body.statefam,
             lga: req.body.lgafam,
@@ -88,9 +82,8 @@ module.exports = {
             profile: req.body.profile,
             totalprice: req.body.totalprice,
             paymentStatus: req.body.paymentStatus,
-            vaccinationStatus: 'unassigned',
+            vaccinationStatus: "unassigned",
             timestamp: new Date().toISOString(),
-            vaccinator:req.body.vaccinator,
             startDate: req.body.date,
           });
 
@@ -124,15 +117,15 @@ module.exports = {
 
         if (!err) {
           const corporate = new Corporate({
-            type: 'corporate',
+            type: "corporate",
             fullname: req.body.fullname,
             email: req.body.email,
             phone: req.body.phone,
             questions: req.body.questions,
             companyDetails: req.body.companydetails,
-            vaccinationStatus: 'unassigned',
+            vaccinationStatus: "unassigned",
             timestamp: new Date().toISOString(),
-            vaccinator:req.body.vaccinator,
+            vaccinator: req.body.vaccinator,
             startDate: req.body.date,
             dosageNumber: req.body.dosageNumber,
           });
@@ -165,112 +158,124 @@ module.exports = {
         let result = {};
         let status = 200;
         if (!err) {
-            Myself.find({}, null,  {sort: {timestamp: -1}}, (err, myself) => {
+          Myself.find({}, null, { sort: { timestamp: -1 } }, (err, myself) => {
+            if (!err) {
+              result.status = status;
+              result.error = err;
+              result.result = myself;
+            } else {
+              status = 500;
+              result.status = status;
+              result.error = err;
+            }
+            res.status(status).send(result);
+          });
+        } else {
+          status = 401;
+          result.status = status;
+          result.error = err;
+          res.status(status).send(result);
+        }
+      }
+    );
+  },
+  getAllFamily: (req, res) => {
+    mongoose.connect(
+      process.env.DB_CONNECTION,
+      { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
+      (err) => {
+        let result = {};
+        let status = 200;
+        if (!err) {
+          Family.find({}, null, { sort: { timestamp: -1 } }, (err, family) => {
+            if (!err) {
+              result.status = status;
+              result.error = err;
+              result.result = family;
+            } else {
+              status = 500;
+              result.status = status;
+              result.error = err;
+            }
+            res.status(status).send(result);
+          });
+        } else {
+          status = 401;
+          result.status = status;
+          result.error = err;
+          res.status(status).send(result);
+        }
+      }
+    );
+  },
+  getAllCorp: (req, res) => {
+    mongoose.connect(
+      process.env.DB_CONNECTION,
+      { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
+      (err) => {
+        let result = {};
+        let status = 200;
+        if (!err) {
+          Corporate.find(
+            {},
+            null,
+            { sort: { timestamp: -1 } },
+            (err, corporate) => {
               if (!err) {
                 result.status = status;
                 result.error = err;
-                result.result = myself;
+                result.result = corporate;
               } else {
                 status = 500;
                 result.status = status;
                 result.error = err;
               }
               res.status(status).send(result);
-            });
-          } else {
-            status = 401;
-            result.status = status;
-            result.error = err;
-            res.status(status).send(result);
-          }
-      })
-    },
-    getAllFamily: (req, res) => {
-      mongoose.connect(
-        process.env.DB_CONNECTION,
-        { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
-        (err) => {
-          let result = {};
-          let status = 200;
-          if (!err) {
-              Family.find({}, null,  {sort: {timestamp: -1}}, (err, family) => {
-                if (!err) {
-                  result.status = status;
-                  result.error = err;
-                  result.result = family;
-                } else {
-                  status = 500;
-                  result.status = status;
-                  result.error = err;
-                }
-                res.status(status).send(result);
-              });
-            } else {
-              status = 401;
-              result.status = status;
-              result.error = err;
-              res.status(status).send(result);
             }
-        })
-      },
-      getAllCorp: (req, res) => {
-        mongoose.connect(
-          process.env.DB_CONNECTION,
-          { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
-          (err) => {
-            let result = {};
-            let status = 200;
-            if (!err) {
-                Corporate.find({}, null,  {sort: {timestamp: -1}},(err, corporate) => {
-                  if (!err) {
-                    result.status = status;
-                    result.error = err;
-                    result.result = corporate;
-                  } else {
-                    status = 500;
-                    result.status = status;
-                    result.error = err;
-                  }
-                  res.status(status).send(result);
-                });
-              } else {
-                status = 401;
+          );
+        } else {
+          status = 401;
+          result.status = status;
+          result.error = err;
+          res.status(status).send(result);
+        }
+      }
+    );
+  },
+  getAllStarted: (req, res) => {
+    mongoose.connect(
+      process.env.DB_CONNECTION,
+      { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
+      (err) => {
+        let result = {};
+        let status = 200;
+        if (!err) {
+          Myself.find(
+            {
+              $text: {
+                $search: "started",
+              },
+            },
+            (err, started) => {
+              if (!err) {
                 result.status = status;
                 result.error = err;
-                res.status(status).send(result);
+                result.result = started;
+              } else {
+                status = 500;
+                result.status = status;
+                result.error = err;
               }
-          })
-        },
-        getAllStarted: (req, res) => {
-          mongoose.connect(
-            process.env.DB_CONNECTION,
-            { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
-            (err) => {
-              let result = {};
-              let status = 200;
-              if (!err) {
-                  Myself.find({
-                    $text: {
-                      $search: "started"
-                  }
-                  }, (err, started) => {
-                    if (!err) {
-                      result.status = status;
-                      result.error = err;
-                      result.result = started;
-                    } else {
-                      status = 500;
-                      result.status = status;
-                      result.error = err;
-                    }
-                    res.status(status).send(result);
-                  });
-                } else {
-                  status = 401;
-                  result.status = status;
-                  result.error = err;
-                  res.status(status).send(result);
-                }
-            })
-          }
+              res.status(status).send(result);
+            }
+          );
+        } else {
+          status = 401;
+          result.status = status;
+          result.error = err;
+          res.status(status).send(result);
+        }
+      }
+    );
+  },
 };

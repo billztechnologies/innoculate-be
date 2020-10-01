@@ -1,20 +1,36 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
+const doseSchema = new Schema({
+  vaccbatchno: String,
+  vaccstage: Number,
+  vaccexp: Date,
+  dategiven: Date,
+  vaccinator: String,
+});
+const vaccSchema = new Schema({
+  _id: String,
+  name: String,
+  eachdose: [doseSchema],
+});
+const brandSchema = new Schema({
+  name: String,
+  price: Number,
+});
 const mySchema = new Schema({
   place: {
     type: "String",
     required: true,
   },
-  type:{
-    type:"String",
+  type: {
+    type: "String",
     required: true,
-    trim: true
+    trim: true,
   },
   state: "String",
   lga: "String",
   hub: "String",
-  vaccine:[],
+  vaccine: [vaccSchema],
   profile: {
     firstname: {
       type: "String",
@@ -41,24 +57,22 @@ const mySchema = new Schema({
       required: true,
       trim: true,
     },
-    time: "String",
-    age: "Number",
+    time: Date,
+    age: Number,
     address: {
       address: "String",
       zipcode: "String",
     },
   },
-  brandschosen:[],
-  totalprice: 'Number',
-  paymentStatus: 'String',
-  vaccinationStatus: 'String',
-  vaccinator:'String',
-  startDate: "String",
-  dosageNumber: "Number",
+  brandschosen: [brandSchema],
+  totalprice: "Number",
+  paymentStatus: "String",
+  vaccinationStatus: "String",
+
   timestamp: {
     type: Date,
-    required: true
-  }
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Myself", mySchema);
