@@ -481,4 +481,37 @@ module.exports = {
         console.log("Error", err);
       });
   },
+  // delete Booking
+  deleteBooking: (req, res) => {
+    mongoose
+      .connect(
+        process.env.DB_CONNECTION,
+        {
+          useNewUrlParser: true,
+          useCreateIndex: true,
+          useUnifiedTopology: true,
+          useFindAndModify: false,
+        },
+        async (err) => {
+          let result = {};
+          let status = 200;
+          let filter = { _id: req.params.id };
+          console.log(filter);
+
+          if (!err) {
+            Vaccine.findOneAndRemove(filter, function (err, vaccine) {
+              return vaccine;
+            });
+          } else {
+            let status = 500;
+            result.status = status;
+            result.result = err;
+          }
+          res.status(status).send(result);
+        }
+      )
+      .catch((err) => {
+        console.log("Error", err);
+      });
+  },
 };
