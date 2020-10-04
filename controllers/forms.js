@@ -44,7 +44,7 @@ module.exports = {
           });
           myself.save((err, myself) => {
             if (!err) {
-              result.status = status;
+              result.status = 201;
               result.result = myself;
             } else {
               status = 500;
@@ -89,7 +89,7 @@ module.exports = {
 
           family.save((err, family) => {
             if (!err) {
-              result.status = status;
+              result.status = 200;
               result.result = family;
             } else {
               status = 500;
@@ -107,149 +107,101 @@ module.exports = {
       }
     );
   },
-  addcorp: (req, res) => {
-    mongoose.connect(
-      process.env.DB_CONNECTION,
-      { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
-      (err) => {
-        let result = {};
-        let status = 200;
-
-        if (!err) {
-          const corporate = new Corporate({
-            type: "corporate",
-            fullname: req.body.fullname,
-            email: req.body.email,
-            phone: req.body.phone,
-            questions: req.body.questions,
-            companyDetails: req.body.companydetails,
-            vaccinationStatus: "unassigned",
-            timestamp: new Date().toISOString(),
-            vaccinator: req.body.vaccinator,
-            startDate: req.body.date,
-            dosageNumber: req.body.dosageNumber,
-          });
-
-          corporate.save((err, corporate) => {
-            if (!err) {
-              result.status = status;
-              result.result = corporate;
-            } else {
-              status = 500;
-              result.status = status;
-              result.error = err;
-            }
-            res.status(status).send(result);
-          });
-        } else {
-          status = 500;
-          result.status = status;
-          result.error = err;
-          res.status(status).send(result);
+  addcorp: async (req, res) => {
+    const corporate = new Corporate({
+      type: "corporate",
+      fullname: req.body.fullname,
+      email: req.body.email,
+      phone: req.body.phone,
+      questions: req.body.questions,
+      companyDetails: req.body.companydetails,
+      vaccinationStatus: "unassigned",
+      timestamp: new Date().toISOString(),
+      vaccinator: req.body.vaccinator,
+      startDate: req.body.date,
+      dosageNumber: req.body.dosageNumber,
+    });
+    let result = {}
+        try{
+          const corpuser = await corporate.save();
+          result.result = corpuser
+          res.status(200).send(result)
+        } catch(err){
+          res.status(400).send("corporate booking not saved")
         }
-      }
-    );
   },
-  getAllMyself: (req, res) => {
-    mongoose.connect(
-      process.env.DB_CONNECTION,
-      { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
-      (err) => {
-        let result = {};
-        let status = 200;
-        if (!err) {
+  // get all individual bookings and dort according to date of creation
+
+  getAllMyself: async (req, res) => {
+    let result = {}
+        try {
           Myself.find({}, null, { sort: { timestamp: -1 } }, (err, myself) => {
             if (!err) {
-              result.status = status;
-              result.error = err;
+              result.status = 200;
               result.result = myself;
+              res.status(200).send(result)
             } else {
-              status = 500;
-              result.status = status;
+              result.status = 500;
               result.error = err;
+              res.status(500).send(result.error);
             }
-            res.status(status).send(result);
+           
           });
-        } else {
+        } catch(err){
           status = 401;
           result.status = status;
           result.error = err;
           res.status(status).send(result);
         }
-      }
-    );
   },
   getAllFamily: (req, res) => {
-    mongoose.connect(
-      process.env.DB_CONNECTION,
-      { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
-      (err) => {
-        let result = {};
-        let status = 200;
-        if (!err) {
+    let result ={}
+        try {
           Family.find({}, null, { sort: { timestamp: -1 } }, (err, family) => {
             if (!err) {
-              result.status = status;
+              result.status = 200;
               result.error = err;
               result.result = family;
             } else {
-              status = 500;
-              result.status = status;
+              result.status = 500;
               result.error = err;
             }
-            res.status(status).send(result);
+            res.status(result.status).send(result);
           });
-        } else {
-          status = 401;
-          result.status = status;
+        } catch(err) {
+          result.status = 401;
           result.error = err;
-          res.status(status).send(result);
+          res.status(result.status).send(result);
         }
-      }
-    );
   },
   getAllCorp: (req, res) => {
-    mongoose.connect(
-      process.env.DB_CONNECTION,
-      { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
-      (err) => {
-        let result = {};
-        let status = 200;
-        if (!err) {
+    let result = {}
+       try {
           Corporate.find(
             {},
             null,
             { sort: { timestamp: -1 } },
             (err, corporate) => {
               if (!err) {
-                result.status = status;
+                result.status = 200;
                 result.error = err;
                 result.result = corporate;
               } else {
-                status = 500;
-                result.status = status;
+                result.status = 500;
                 result.error = err;
               }
-              res.status(status).send(result);
+              res.status(result.status).send(result);
             }
           );
-        } else {
+        } catch(err) {
           status = 401;
           result.status = status;
           result.error = err;
           res.status(status).send(result);
         }
-      }
-    );
   },
   getAllStarted: (req, res) => {
-    mongoose.connect(
-      process.env.DB_CONNECTION,
-      { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
-      (err) => {
-        let result = {};
-        let status = 200;
-        if (!err) {
+        try {
           Myself.find(
             {
               $text: {
@@ -257,42 +209,26 @@ module.exports = {
               },
             },
             (err, started) => {
+              let result ={}
               if (!err) {
-                result.status = status;
-                result.error = err;
-                result.result = started;
+                result.result = started
+                res.status(200).send(result);
               } else {
-                status = 500;
-                result.status = status;
-                result.error = err;
+                res.status(500).send('bookings not found')
               }
-              res.status(status).send(result);
+              
             }
           );
-        } else {
-          status = 401;
-          result.status = status;
-          result.error = err;
-          res.status(status).send(result);
+        } catch(err) {
+          res.status(404).send("vaccination bookings that have been started were not found");
         }
-      }
-    );
   },
-  // Amount/ income made overtime
+  // Amount of income made overtime
 
-  getIncome: (req, res) => {
-    mongoose.connect(
-      process.env.DB_CONNECTION,
-      { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
-      async (err) => {
-        let result = {};
-        let status = 200;
-        let total = null;
-        let mytotal = [];
-        let famtotal = [];
-        if (!err) {
-          myprices = [];
-          famprices = [];
+  getIncome: async (req, res) => {
+    myprices = [];
+    famprices = [];
+        try{
           let mytotal = await Myself.find(
             { paymentStatus: "paid" },
             (err, myself) => {
@@ -309,28 +245,18 @@ module.exports = {
               });
             }
           );
+          let result = {}
           total = myprices.concat(famprices);
-          result.result = total;
-          res.status(status).send(result);
-        } else {
-          status = 500;
-          result.status = status;
-          result.error = err;
-          res.status(status).send(result);
+          result.result = total
+          res.status(200).send(result);
+        } catch(err) {
+         res.status(400).send("total income not found")
         }
-      }
-    );
-  },
+    },
   // total  number of shots/dosages that have been given
-  getShots: (req, res) => {
-    mongoose.connect(
-      process.env.DB_CONNECTION,
-      { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
-      async (err) => {
-        let result = {};
-        let status = 200;
+  getShots: async (req, res) => {
         let total = null;
-        if (!err) {
+        try {
           myshots = [];
           famshots = [];
           let Myshots = await Myself.find({}, (err, myself) => {
@@ -353,15 +279,11 @@ module.exports = {
             }
           );
           total = myshots.concat(famshots);
+          let result = {}
           result.result = total;
-          res.status(status).send(result);
-        } else {
-          status = 500;
-          result.status = status;
-          result.error = err;
-          res.status(status).send(result);
+          res.status(200).send(result);
+        } catch(err) {
+          res.status(404).send('No shots found');
         }
-      }
-    );
   },
 };

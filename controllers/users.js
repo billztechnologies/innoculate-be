@@ -90,14 +90,10 @@ module.exports = {
         },
   login: (req, res) => {
     const { email, password } = req.body;
-    mongoose.connect(
-      process.env.DB_CONNECTION,
-      { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
-      (err) => {
         let result = {};
         let status = 200;
 
-        if (!err) {
+        try {
           User.findOne({ email }, (err, user) => {
             if (!err && user) {
               bcrypt
@@ -138,14 +134,12 @@ module.exports = {
               res.status(status).send(err);
             }
           });
-        } else {
+        } catch(err) {
           status = 500;
           result.status = status;
           result.error = err;
           res.status(status).send(result);
         }
-      }
-    );
   },
   getUsers: (req, res) => {
     mongoose.connect(

@@ -8,11 +8,13 @@ const stage = require('./config')[environment];
 const logger = require("morgan");
 const routes =require("./routes/index.js")
 const cors = require('cors')
+const mongoose = require('mongoose')
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended:true
 }));
+app.use(cors('*'))
 app.use((req,res,next)=>{
     res.header('Access-Control-Allow-Origin', '*');
     res.header("Access-Control-Allow-Headers","Origin, X-Requested-With,Content-Type, Accept, Authorization");
@@ -33,7 +35,11 @@ app.use('/api/v1', routes(router))
 
 
 // connect to db
-
+mongoose.connect(
+    process.env.DB_CONNECTION,
+    { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },()=>{
+        console.log("db connection successful")
+    })
 
 //listen at port 3000
 app.listen(`${stage.port}`, ()=>{
