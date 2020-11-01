@@ -6,8 +6,10 @@ const jwt = require("jsonwebtoken");
 
 // refreshTokens array
 let refreshTokens = [];
+let rtoken;
 module.exports = {
-  auth: (req, res, next) => {
+ auth: async (req, res, next) => {
+   re
     let token = req.headers["authorization"];
     token = token.split(" ")[1]; //take the Access token
 
@@ -38,7 +40,7 @@ module.exports = {
           },
           process.env.TOKEN_SECRET,
           {
-            expiresIn: "40s",
+            expiresIn: "20s",
           }
         );
         return res.status(200).json({
@@ -120,9 +122,9 @@ module.exports = {
               res.status(status).send(result);
             }
           }).catch((err) => {
-            status = 500;
+            status = 400;
             result.status = status;
-            result.error = err;
+            result.error = "bad request, no user request id sent";
             res.status(status).send(err);
           });
         } else {
@@ -152,14 +154,15 @@ module.exports = {
                 role: user.role,
               };
               let accessToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
-                expiresIn: "40s",
-                issuer: "https://www.inocul8.com.ng",
-              });
-              let refreshToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
                 expiresIn: "20s",
                 issuer: "https://www.inocul8.com.ng",
               });
+              let refreshToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
+                expiresIn: "7d",
+                issuer: "https://www.inocul8.com.ng",
+              });
               refreshTokens.push(refreshToken);
+              rtoken = refreshToken
               result = {
                 accessToken,
                 refreshToken,
@@ -183,7 +186,7 @@ module.exports = {
         }
       });
     } catch (err) {
-      status = 500;
+      status = 400;
       result.status = status;
       result.error = "cannot handle bad request, check request information";
       return res.status(status).send(result);
