@@ -96,8 +96,11 @@ module.exports = {
     );
   },
   loginLocal: (req, res) => {
-    const payload = req.body;
-    console.log(payload);
+    const decoded= jwt.decode(req.body.token,
+      {
+        complete: true
+      })
+    console.log(decoded.payload);
 
     mongoose.connect(
       process.env.DB_CONNECTION,
@@ -105,7 +108,7 @@ module.exports = {
       (err) => {
         let result = {};
         let status = 200;
-        const { id, email, role } = payload;
+        const { id, email, role } = decoded.payload;
         console.log(id, email);
         if (!err) {
           User.findOne({ _id: id }, (err, user) => {
@@ -119,7 +122,9 @@ module.exports = {
               status = 401;
               result.status = status;
               result.error = "Authentication error";
-              res.status(status).send(result);
+              res.status(status).json({
+                result
+              });
             }
           }).catch((err) => {
             status = 400;
@@ -154,7 +159,7 @@ module.exports = {
                 role: user.role,
               };
               let accessToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
-                expiresIn: "20s",
+                expiresIn: "120s",
                 issuer: "https://www.inocul8.com.ng",
               });
               let refreshToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
