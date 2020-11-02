@@ -25,7 +25,6 @@ module.exports ={
                 status:401
             }
             res.status(401).send(result)
-            userController.renewAuth()
         }
     }
 }

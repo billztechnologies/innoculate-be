@@ -12,11 +12,5 @@ module.exports = (router) => {
     .get(validateToken, userController.getAllNurse);
   router.route("/login").post(userController.login);
   router.route("/login-local").post(validateToken, userController.loginLocal);
-  router.route("/renew-token").post(function(){
-    if(!validateToken){
-      userController.renewAuth
-    } else {
-      console.log(null)
-    }
-   });
-};
+  router.route("/renew-token").post(userController.renewAuth)
+}
