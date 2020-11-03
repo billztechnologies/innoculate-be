@@ -40,7 +40,7 @@ module.exports = {
           },
           process.env.TOKEN_SECRET,
           {
-            expiresIn: "20s",
+            expiresIn: "3mins",
           }
         );
         return res.status(200).json({
@@ -96,6 +96,7 @@ module.exports = {
     );
   },
   loginLocal: (req, res) => {
+  
     const decoded= jwt.decode(req.body.token,
       {
         complete: true
@@ -111,7 +112,7 @@ module.exports = {
         const { id, email, role } = decoded.payload;
         console.log(id, email);
         if (!err) {
-          User.findOne({ _id: id }, (err, user) => {
+          User.findOne({ email: email }, (err, user) => {
             console.log(user);
             if (!err && user) {
               result.message = "Auth success";
@@ -159,7 +160,7 @@ module.exports = {
                 role: user.role,
               };
               let accessToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
-                expiresIn: "120s",
+                expiresIn: "24h",
                 issuer: "https://www.inocul8.com.ng",
               });
               let refreshToken = jwt.sign(payload, process.env.TOKEN_SECRET, {

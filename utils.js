@@ -8,14 +8,15 @@ module.exports ={
         if(authHeader){
             const token = req.headers.authorization.split(' ')[1];
             const options = {
-                expiresIn: '2d',
-                // issuer: 'https://inocul8.com.ng'
+                expiresIn: '120s',
+                issuer: 'https://www.inocul8.com.ng'
             };
             try{
-                result = jwt.verify(token, process.env.TOKEN_SECRET, options);
-                req.decoded = result;
+                result = jwt.verify(token, process.env.TOKEN_SECRET);
+                console.log(result)
                 next()
             } catch(err) {
+                res.status(400).json({message: "bad request"})
                 throw new Error(err)
                 
             }
