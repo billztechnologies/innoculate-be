@@ -38,6 +38,8 @@ const userSchema = new Schema({
     done: {
         type: Boolean
     },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
     timestamp: {
         type: Date,
         required: true

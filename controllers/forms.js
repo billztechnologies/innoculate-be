@@ -200,27 +200,113 @@ module.exports = {
           res.status(status).send(result);
         }
   },
-  getAllStarted: (req, res) => {
+  getAllStarted: async (req, res) => {
+    let individual = []
+    let fam =[]
+    let corp = []
+
+    let result = {}
         try {
-          Myself.find(
+          await Myself.find(
             {
-              $text: {
-                $search: "started",
-              },
+              vaccinationStatus: "started"
             },
-            (err, started) => {
+            (err, indivStarted) => {
               let result ={}
+             
               if (!err) {
-                result.result = started
-                res.status(200).send(result);
+               individual = indivStarted
               } else {
-                res.status(500).send('bookings not found')
-              }
+                console.log("bad")
+                individual = []
+              };
+            })
+              await Family.find(
+                {
+                  vaccinationStatus: "started"
+                },
+                (err, started) => {
+                  let result ={}
+                  if (!err) {
+                    fam = started
+                  } else {
+                    fam = []
+                  };
+                })
+                 await Corporate.find(
+                    {
+                      vaccinationStatus: "started" 
+                    },
+                    (err, started) => {
+                      let result ={}
+                      if (!err) {
+                        corp = started
+                      } else {
+                        corp = []
+                      };
               
             }
           );
+          let all = individual.concat(fam).concat(corp)
+          result.bookingStarted = all.length
+          res.status(200).json({result})
         } catch(err) {
           res.status(404).send("vaccination bookings that have been started were not found");
+        }
+  },
+  // get all finished bookings
+  getAllFinished: async (req, res) => {
+    let individual = []
+    let fam =[]
+    let corp = []
+
+    let result = {}
+        try {
+          await Myself.find(
+            {
+              vaccinationStatus: "finished"
+            },
+            (err, indiv) => {
+              let result ={}
+             
+              if (!err) {
+               individual = indiv
+              } else {
+                console.log("bad")
+                individual = []
+              };
+            })
+              await Family.find(
+                {
+                  vaccinationStatus: "finished"
+                },
+                (err, famFinished) => {
+                  let result ={}
+                  if (!err) {
+                    fam = famFinished
+                  } else {
+                    fam = []
+                  };
+                })
+                 await Corporate.find(
+                    {
+                      vaccinationStatus: "finished" 
+                    },
+                    (err, corpFinished) => {
+                      let result ={}
+                      if (!err) {
+                        corp = corpFinished
+                      } else {
+                        corp = []
+                      };
+              
+            }
+          );
+          let all = individual.concat(fam).concat(corp)
+          result.bookingFinished = all.length
+          res.status(200).json({result})
+        } catch(err) {
+          res.status(404).send("vaccination bookings that have been finished were not found");
         }
   },
   // Amount of income made overtime

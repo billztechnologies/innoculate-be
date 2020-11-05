@@ -9,11 +9,19 @@ const logger = require("morgan");
 const routes =require("./routes/index.js")
 const cors = require('cors')
 const mongoose = require('mongoose')
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const crypto = require('crypto');
+const async = require('async')
+const session = require('express-session')
+const cookieParser = require('cookie-parser')
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended:true
 }));
+app.use(cookieParser())
+app.use(session({ secret: process.env.SESSION_ONE }));
 app.use(cors('*'))
 app.use((req,res,next)=>{
     res.header('Access-Control-Allow-Origin', '*');

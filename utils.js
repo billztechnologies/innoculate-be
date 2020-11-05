@@ -8,7 +8,7 @@ module.exports ={
         if(authHeader){
             const token = req.headers.authorization.split(' ')[1];
             const options = {
-                expiresIn: '120s',
+                expiresIn: '2h',
                 issuer: 'https://www.inocul8.com.ng'
             };
             try{
@@ -16,7 +16,7 @@ module.exports ={
                 console.log(result)
                 next()
             } catch(err) {
-                res.status(400).json({message: "bad request"})
+                res.status(400).json({message: "bad request, check token request"})
                 throw new Error(err)
                 
             }
