@@ -16,7 +16,7 @@ module.exports ={
                 console.log(result)
                 next()
             } catch(err) {
-                res.status(400).json({message: "bad request"})
+                res.status(400).json({message: "session expired, try logging in again"})
                 throw new Error(err)
                 
             }

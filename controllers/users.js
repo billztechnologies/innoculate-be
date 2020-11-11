@@ -160,7 +160,7 @@ module.exports = {
                 role: user.role,
               };
               let accessToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
-                expiresIn: "24h",
+                expiresIn: "5mins",
                 issuer: "https://www.inocul8.com.ng",
               });
               let refreshToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
