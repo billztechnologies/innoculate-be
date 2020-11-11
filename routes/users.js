@@ -13,5 +13,7 @@ module.exports = (router) => {
   router.route("/login").post(userController.login);
   router.route("/login-local").post(validateToken, userController.loginLocal);
   router.route("/renew-token").post(userController.renewAuth)
-  router.route("/deletenurse/:id").delete(updateController.deleteNurseAcct);
+  router.route("/deletenurse/:id").delete(()=>{
+    userController.deleteNurseAcct
+  });
 }
