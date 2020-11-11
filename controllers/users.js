@@ -294,5 +294,37 @@ module.exports = {
       }
     );
   },
+  DeleteNurseAcct : (req, res)=>{
+    mongoose
+      .connect(
+        process.env.DB_CONNECTION,
+        {
+          useNewUrlParser: true,
+          useCreateIndex: true,
+          useUnifiedTopology: true,
+          useFindAndModify: false,
+        },
+        async (err) => {
+          let result = {};
+          let status = 200;
+          let filter = { _id: req.params.id, role: "nurse" };
+          console.log(filter);
+
+          if (!err) {
+            User.findOneAndRemove(filter, function (err, user) {
+              return user;
+            });
+          } else {
+            let status = 500;
+            result.status = status;
+            result.result = err;
+          }
+          return res.status(status).send(result);
+        }
+      )
+      .catch((err) => {
+        console.log("Error", err);
+      });
+  }
   // forgot password implementation
 };
