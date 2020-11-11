@@ -17,12 +17,6 @@ const session = require('express-session')
 const cookieParser = require('cookie-parser')
 
 app.use(cors('*'))
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended:true
-}));
-app.use(cookieParser())
-// app.use(session({ secret: process.env.SESSION_ONE }));
 
 app.use((req,res,next)=>{
     res.header('Access-Control-Allow-Origin', '*');
@@ -34,6 +28,15 @@ app.use((req,res,next)=>{
     }
     next()
 });
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended:true
+}));
+app.use(cookieParser())
+// app.use(session({ secret: process.env.SESSION_ONE }));
+
+
 
 
 if(environment !== 'production'){
