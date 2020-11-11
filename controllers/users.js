@@ -40,7 +40,7 @@ module.exports = {
           },
           process.env.TOKEN_SECRET,
           {
-            expiresIn: "3mins",
+            expiresIn: "2h",
           }
         );
         return res.status(200).json({
@@ -160,7 +160,7 @@ module.exports = {
                 role: user.role,
               };
               let accessToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
-                expiresIn: "5mins",
+                expiresIn: "2h",
                 issuer: "https://www.inocul8.com.ng",
               });
               let refreshToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
@@ -294,4 +294,5 @@ module.exports = {
       }
     );
   },
+  // forgot password implementation
 };

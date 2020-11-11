@@ -8,7 +8,7 @@ module.exports ={
         if(authHeader){
             const token = req.headers.authorization.split(' ')[1];
             const options = {
-                expiresIn: '120s',
+                expiresIn: '2h',
                 issuer: 'https://www.inocul8.com.ng'
             };
             try{

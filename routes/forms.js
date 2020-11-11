@@ -15,6 +15,7 @@ module.exports = (router) => {
     .post(formController.addcorp)
     .get(formController.getAllCorp);
   router.route("/getstarted").get(formController.getAllStarted);
+  router.route("/getfinished").get(formController.getAllFinished);
   router.route("/income").get(formController.getIncome);
   router.route("/shots").get(formController.getShots);
 };
