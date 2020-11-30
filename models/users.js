@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require('bcrypt');
 const environment = process.env.NODE_ENV;
 const stage = require("../config")[environment];
+const crypto = require('crypto')
 
 const Schema = mongoose.Schema;
 
@@ -40,12 +41,8 @@ const userSchema = new Schema({
     },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
-    timestamp: {
-        type: Date,
-        required: true
-    }
 
-});
+}, {timestamps: true});
 
 userSchema.pre("save", (next)=>{
     const user = this;
@@ -63,5 +60,29 @@ userSchema.pre("save", (next)=>{
         })
     }
 })
+userSchema.methods.comparePassword = function(password) {
+    return bcrypt.compareSync(password, this.password);
+};
+
+userSchema.methods.generateJWT = function() {
+    const today = new Date();
+    const expirationDate = new Date(today);
+    expirationDate.setDate(today.getDate() + 60);
+
+    let payload = {
+        id: this._id,
+        email: this.email,
+        name: this.name
+    };
+
+    return jwt.sign(payload, process.env.TOKEN_SECRET, {
+        expiresIn: parseInt(expirationDate.getTime() / 1000, 10)
+    });
+};
+
+userSchema.methods.generatePasswordReset = function() {
+    this.resetPasswordToken = crypto.randomBytes(20).toString('hex');
+    this.resetPasswordExpires = Date.now() + 3600000; //expires in an hour
+};
 
 module.exports = mongoose.model("User", userSchema);

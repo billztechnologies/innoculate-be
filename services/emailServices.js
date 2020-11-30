@@ -13,13 +13,13 @@ class EmailService {
   constructor() {
     this.emailClient = nodemailer.createTransport(transport)
   }
-  sendText(to, subject, text) {
+  sendText(to, subject, html) {
     return new Promise((resolve, reject) => {
       this.emailClient.sendMail({
         from: '"Inocul8" <info@inocul8.com.ng>',
         to,
         subject,
-        text,
+        html,
       }, (err, info) => {
         if (err) {
           reject(err)

@@ -3,13 +3,23 @@ const User = require("../models/users");
 require("dotenv/config");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const emailService = require("../services/emailServices");
+const handlebars = require("handlebars");
+const fs = require("fs");
+const path = require("path");
 
+
+let reset_pass = "/reset/";
 // refreshTokens array
 let refreshTokens = [];
-let rtoken;
+const emailTemplateSource = fs.readFileSync(
+  path.join(__dirname, "..", "templates", "/resetTemplate.hbs"),
+  "utf8"
+);
+const template = handlebars.compile(emailTemplateSource);
 module.exports = {
- auth: async (req, res, next) => {
-   re
+  auth: async (req, res, next) => {
+    re;
     let token = req.headers["authorization"];
     token = token.split(" ")[1]; //take the Access token
 
@@ -40,7 +50,7 @@ module.exports = {
           },
           process.env.TOKEN_SECRET,
           {
-            expiresIn: "2h",
+            expiresIn: "30000",
           }
         );
         return res.status(200).json({
@@ -71,7 +81,7 @@ module.exports = {
               localgovt: req.body.localgovt,
               newassigned_id: req.body.newassigned_id,
               done: true,
-              timestamp: new Date().toISOString(),
+              // timestamp: new Date().toISOString(),
             });
 
             user.save((err, user) => {
@@ -96,11 +106,9 @@ module.exports = {
     );
   },
   loginLocal: (req, res) => {
-  
-    const decoded= jwt.decode(req.body.token,
-      {
-        complete: true
-      })
+    const decoded = jwt.decode(req.body.token, {
+      complete: true,
+    });
     console.log(decoded.payload);
 
     mongoose.connect(
@@ -124,7 +132,7 @@ module.exports = {
               result.status = status;
               result.error = "Authentication error";
               res.status(status).json({
-                result
+                result,
               });
             }
           }).catch((err) => {
@@ -160,7 +168,7 @@ module.exports = {
                 role: user.role,
               };
               let accessToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
-                expiresIn: "2h",
+                expiresIn: "30000",
                 issuer: "https://www.inocul8.com.ng",
               });
               let refreshToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
@@ -168,7 +176,7 @@ module.exports = {
                 issuer: "https://www.inocul8.com.ng",
               });
               refreshTokens.push(refreshToken);
-              rtoken = refreshToken
+              rtoken = refreshToken;
               result = {
                 accessToken,
                 refreshToken,
@@ -283,18 +291,18 @@ module.exports = {
               result.status = status;
               result.error = err;
             }
-            res.status(status).send(result);
+            return res.status(status).send(result);
           });
         } else {
           status = 500;
           result.status = status;
           result.error = err;
-          res.status(status).send(result);
+          return res.status(status).send(result);
         }
       }
     );
   },
-  DeleteNurseAcct : (req, res)=>{
+  deleteNurseAcct: (req, res) => {
     mongoose
       .connect(
         process.env.DB_CONNECTION,
@@ -311,6 +319,7 @@ module.exports = {
           console.log(filter);
 
           if (!err) {
+            result.result = "nurse deleted";
             User.findOneAndRemove(filter, function (err, user) {
               return user;
             });
@@ -325,6 +334,129 @@ module.exports = {
       .catch((err) => {
         console.log("Error", err);
       });
-  }
+  },
   // forgot password implementation
+  passwordRecoverMail: (req, res) => {
+    User.findOne({ email: req.body.email })
+      .then((user) => {
+        if (!user)
+          return res.status(401).json({
+            message:
+              "The email address " +
+              req.body.email +
+              " is not associated with any account. Double-check your email address and try again.",
+          });
+
+        //Generate and set password reset token
+        user.generatePasswordReset();
+
+        // Save the updated user object
+        user
+          .save()
+          .then((user) => {
+            // send email
+            let link = `${req.headers.origin}${reset_pass}${user.resetPasswordToken}`;
+
+            const htmlToSend = template({
+              message: `Hi ${user.name}`,
+              reset: `Please click on the following link, ${link}, to reset your password.`,
+              Note: `Note: this link will be null in the next 5 minutes and will not have the authorization to allow password change`,
+              noreq: `If you did not request this, please ignore this email and your password will remain unchanged.`,
+            });
+
+            const mailOptions = {
+              to: user.email,
+              subject: "Password change request",
+              html: htmlToSend,
+            };
+
+            emailService
+              .sendText(mailOptions.to, mailOptions.subject, mailOptions.html)
+              .then(() => {
+                res.status(200).json({ message: "reset password link sent" });
+              })
+              .catch((err) => {
+                res.status(500).json({ message: "Internal Error" });
+                console.log(err);
+              });
+          })
+          .catch((err) => res.status(500).json({ message: err.message }));
+      })
+      .catch((err) => res.status(500).json({ message: err.message }));
+  },
+  reset: (req, res) => {
+    User.findOne({
+      resetPasswordToken: req.params.token,
+      resetPasswordExpires: { $gt: Date.now() },
+    })
+      .then((user) => {
+        if (!user)
+          return res.status(401).json({
+            message: "Password reset token is invalid or has expired.",
+          });
+
+        //Redirect user to form with the email address
+        // res.render("reset", { user });
+        return res.status(200).json({
+          message: "valid token",
+        });
+      })
+      .catch((err) => res.status(500).json({ message: err.message }));
+  },
+  passwordReset: (req, res) => {
+    User.findOne({
+      resetPasswordToken: req.params.token,
+      resetPasswordExpires: { $gt: Date.now() },
+    }).then((user) => {
+      if (!user)
+        return res
+          .status(401)
+          .json({ message: "Password reset token is invalid or has expired." });
+
+      //Set the new password
+      bcrypt.hash(req.body.password, 10, (err, hash) => {
+        if (err) {
+          throw err;
+        }
+        console.log(req.body.password, hash)
+        user.password = hash;
+        console.log(user.password, user._id)
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+
+        user.save((err) => {
+          if (err) return res.status(500).json({ message: err.message });
+  
+          // send email
+          const htmlToSend = template({
+            message: `Hi ${user.name}`,
+            reset: `Your password has been successfully updated, please login with your newly confirmed password`,
+            noreq: `If you did not request this, please contact us`,
+          });
+  
+          const mailOptions = {
+            to: user.email,
+            subject: "Password changed",
+            html: htmlToSend,
+          };
+  
+          emailService
+            .sendText(mailOptions.to, mailOptions.subject, mailOptions.html)
+            .then(() => {
+              res.status(200).json({ message: "password changed successfully" });
+            })
+            .catch((err) => {
+              res.status(500).json({ message: "Internal Error" });
+              console.log(err);
+            });
+        });
+      });
+      console.log(user);
+      // Save
+      
+    })
+    .catch(err=>{
+      console.log(err)
+    })
+  },
 };
