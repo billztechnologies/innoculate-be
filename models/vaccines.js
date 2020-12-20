@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+
 const vaccSchema = new Schema({
   name: {
     type: "String",

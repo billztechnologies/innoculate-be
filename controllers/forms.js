@@ -51,13 +51,13 @@ module.exports = {
               result.status = status;
               result.error = err;
             }
-            res.status(status).send(result);
+            return res.status(status).send(result);
           });
         } else {
           status = 500;
           result.status = status;
           result.error = "err";
-          res.status(status).send(result);
+         return res.status(status).send(result);
         }
       }
     );

@@ -75,6 +75,7 @@ module.exports = {
             const user = new User({
               name: req.body.name,
               password: hash,
+              phone: req.body.phone,
               role: req.body.role,
               email: req.body.email,
               state: req.body.state,
@@ -155,55 +156,56 @@ module.exports = {
   login: (req, res) => {
     const { email, password } = req.body;
     let result = {};
-    let status = 200;
+    let status;
 
     try {
       User.findOne({ email }, (err, user) => {
         if (!err && user) {
           bcrypt.compare(password, user.password).then((match) => {
-            if (match) {
-              let payload = {
-                email: user.email,
-                id: user._id,
-                role: user.role,
-              };
-              let accessToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
-                expiresIn: "30000",
-                issuer: "https://www.inocul8.com.ng",
-              });
-              let refreshToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
-                expiresIn: "7d",
-                issuer: "https://www.inocul8.com.ng",
-              });
-              refreshTokens.push(refreshToken);
-              rtoken = refreshToken;
-              result = {
-                accessToken,
-                refreshToken,
-                user,
-              };
-              return res.status(200).json({
-                result,
-              });
-            } else {
+            if (!match) {
               status = 401;
               result.status = status;
               result.error = "password is incorrect, pls try again";
-            }
-            return res.status(status).send(result);
+              res.status(status).json({result});
+            } else{
+            let payload = {
+              email: user.email,
+              id: user._id,
+              role: user.role,
+            };
+            let accessToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
+              expiresIn: "30000",
+              issuer: "https://www.inocul8.com.ng",
+            });
+            let refreshToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
+              expiresIn: "7d",
+              issuer: "https://www.inocul8.com.ng",
+            });
+            refreshTokens.push(refreshToken);
+            rtoken = refreshToken;
+            result = {
+              accessToken,
+              refreshToken,
+              user,
+            };
+            return res.status(200).json({result});
+          }
+          })
+          .catch(err=>{
+            console.log(err);
           });
         } else {
           status = 404;
           result.status = status;
           result.error = "user not found";
-          return res.status(status).send(result);
+           res.status(status).json({message:result.error});
         }
       });
     } catch (err) {
       status = 400;
       result.status = status;
       result.error = "cannot handle bad request, check request information";
-      return res.status(status).send(result);
+       res.status(status).send(result);
     }
   },
   getUsers: (req, res) => {
