@@ -20,8 +20,8 @@ const indivVacc = require('./models/eachIndivVacc');
 const twilioService = require('./services/twilioServices')
 const emailService = require('./services/emailServices')
 
-const limiter = expressLimit({windowMs: 60000, max: 10})
-app.use(cors('*'))
+
+app.use(cors())
 
 
 app.use(bodyParser.json());
