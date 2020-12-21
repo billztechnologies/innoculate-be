@@ -157,7 +157,7 @@ module.exports = {
     const { email, password } = req.body;
     let result = {};
     let status;
-
+    
     try {
       User.findOne({ email }, (err, user) => {
         if (!err && user) {
