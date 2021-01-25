@@ -75,7 +75,7 @@ module.exports = {
             const user = new User({
               name: req.body.name,
               password: hash,
-              phone: req.body.phone,
+              phone: req.body.phone_no,
               role: req.body.role,
               email: req.body.email,
               state: req.body.state,
@@ -157,7 +157,7 @@ module.exports = {
     const { email, password } = req.body;
     let result = {};
     let status;
-    
+
     try {
       User.findOne({ email }, (err, user) => {
         if (!err && user) {
@@ -250,11 +250,11 @@ module.exports = {
     mongoose.connect(
       process.env.DB_CONNECTION,
       { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
-      (err) => {
+      async (err) => {
         let result = {};
         let status = 200;
         if (!err) {
-          User.find({ role: "nurse", done: true }, (err, users) => {
+          await User.find({ role: "nurse", done: true }, (err, users) => {
             if (!err) {
               result.status = status;
               result.error = err;
@@ -279,11 +279,11 @@ module.exports = {
     mongoose.connect(
       process.env.DB_CONNECTION,
       { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
-      (err) => {
+      async (err) => {
         let result = {};
         let status = 200;
         if (!err) {
-          User.find({ role: "nurse" }, (err, users) => {
+          await User.find({ role: "nurse" }, (err, users) => {
             if (!err) {
               result.status = status;
               result.error = err;

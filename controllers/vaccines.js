@@ -40,20 +40,51 @@ module.exports = {
       }
     );
   },
-  getvacc: (req, res) => {
+  getvacc:async (req, res) => {
     mongoose.connect(
       process.env.DB_CONNECTION,
       { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
-      (err) => {
+      async (err) => {
         let result = {};
         let status = 200;
 
         if (!err) {
-          Vaccine.find({}, (err, vaccines) => {
+          await Vaccine.find({}, (err, vaccines) => {
             if (!err) {
               result.status = status;
               result.error = err;
               result.result = vaccines;
+            } else {
+              status = 500;
+              result.status = status;
+              result.error = err;
+            }
+            res.status(status).send(result);
+          });
+        } else {
+          status = 500;
+          result.status = status;
+          result.error = err;
+          res.status(status).send(result);
+        }
+      }
+    );
+  },
+  // get one vaccine
+  getOneVacc: (req, res) => {
+    mongoose.connect(
+      process.env.DB_CONNECTION,
+      { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
+      async (err) => {
+        let result = {};
+        let status = 200;
+
+        if (!err) {
+          await Vaccine.findById(req.body.id, (err, vaccine) => {
+            if (!err) {
+              result.status = status;
+              result.error = err;
+              result.result = vaccine;
             } else {
               status = 500;
               result.status = status;
@@ -75,7 +106,7 @@ module.exports = {
     mongoose.connect(
       process.env.DB_CONNECTION,
       { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
-      (err) => {
+      async (err) => {
         let result = {};
         let status = 200;
         let arr =[]
@@ -86,7 +117,7 @@ module.exports = {
       }
       filter()
         if (!err) {
-          Myself.find({'_id':arr}, (err, vaccines) => {
+         await Myself.find({'_id':arr}, (err, vaccines) => {
             if (!err) {
               result.status = status;
               result.error = err;
@@ -112,7 +143,7 @@ module.exports = {
     mongoose.connect(
       process.env.DB_CONNECTION,
       { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
-      (err) => {
+      async (err) => {
         let result = {};
         let status = 200;
         let arr =[]
@@ -123,7 +154,7 @@ module.exports = {
       }
       filter()
         if (!err) {
-          Family.find({'_id':arr}, (err, vaccines) => {
+          await Family.find({'_id':arr}, (err, vaccines) => {
             if (!err) {
               result.status = status;
               result.error = err;
@@ -149,7 +180,7 @@ module.exports = {
     mongoose.connect(
       process.env.DB_CONNECTION,
       { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true },
-      (err) => {
+      async (err) => {
         let result = {};
         let status = 200;
         let arr =[]
@@ -160,7 +191,7 @@ module.exports = {
       }
       filter()
         if (!err) {
-          Corporate.find({'_id':arr}, (err, vaccines) => {
+          await Corporate.find({'_id':arr}, (err, vaccines) => {
             if (!err) {
               result.status = status;
               result.error = err;

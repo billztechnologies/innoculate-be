@@ -13,6 +13,14 @@ const vaccstg = new Schema({
     vaccbatchno: {
         type: String
     },
+    email:{
+        type: String,
+        required: true
+    },
+    vaccNum:{
+        type: String,
+        required: true
+    },
     dategiven: {
         type: Date,
         required: true
@@ -86,6 +94,7 @@ const eachIndivSchema = new Schema({
         type: Date,
         trim: true
     },
+    vaccine:{},
     is_completed: {
         type: Boolean
     },

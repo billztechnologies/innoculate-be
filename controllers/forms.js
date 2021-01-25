@@ -318,6 +318,10 @@ module.exports = {
           let mytotal = await Myself.find(
             { paymentStatus: "paid" },
             (err, myself) => {
+              if (err){
+                throw Error(err)
+              }
+              
               myself.forEach((booking) => {
                 myprices.push(booking.totalprice);
               });
@@ -326,6 +330,9 @@ module.exports = {
           let famtotal = await Family.find(
             { paymentStatus: "paid" },
             (err, family) => {
+              if (err){
+                throw Error(err)
+              }
               family.forEach((booking) => {
                 famprices.push(booking.totalprice);
               });
@@ -336,7 +343,7 @@ module.exports = {
           result.result = total
           res.status(200).send(result);
         } catch(err) {
-         res.status(400).send("total income not found")
+         res.status(400).send("total income not found", err)
         }
     },
   // total  number of shots/dosages that have been given

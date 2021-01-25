@@ -14,14 +14,17 @@ async function calcDate(dategiven, vacc_id,age, next_stage){
     let filter = {_id: vacc_id};
     await Vaccine.findOne(filter, (err, vacc)=>{
        if(!err){
+           if(!vacc.description.dosages){
+               console.log(err)
+           }
            if(vacc.description.dosages){
-            for(let i = 0; i < vacc.description.dosages.length; i++){
-                if(age <= vacc.description.dosages[i].endAge && age >= vacc.description.dosages[i].startAge){
-                     dayNum = vacc.description.dosages[i].patientdosages
-                } else{
-                    dayNum = null
-                } 
-            }
+           for(let i = 0; i < vacc.description.dosages.length; i++){
+            if(age <= vacc.description.dosages[i].endAge && age >= vacc.description.dosages[i].startAge){
+                 dayNum = vacc.description.dosages[i].patientdosages
+            } else{
+                dayNum = null
+            } 
+        }
         } 
         if(dayNum[next_stage] === undefined){
             nextvacc = null;
@@ -103,10 +106,12 @@ module.exports ={
                             serviceType: req.body.serviceType,
                             booking_id: req.body.bookingId,
                             next_stage: req.body.next_stage,
+                            vaccine: req.body.vaccine,
                             nextVaccDate: nextvacc,
                             is_completed: completed,
                             vaccstages: req.body.vaccstages
                         });
+                        console.log(eachIndiv)
                         
                        await eachIndiv.save((err, eachIndiv)=>{
                             if(!err){
@@ -116,7 +121,7 @@ module.exports ={
                             } else {
                                 result.status = 400;
                                 return res.status(400).json({
-                                    message: "record not created, bad request, please try again",
+                                    // message: "record not created, bad request, please try again",
                                     err,
                                     result                                     
                                 })

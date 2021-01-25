@@ -43,34 +43,60 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser())
 // app.use(session({ secret: process.env.SESSION_ONE }));
- async function oneWeekLater(){
+ async function twoWeeksLater(){
     await indivVacc.find({next_stage: {$ne: 'done'}}, (err, indiv)=>{
-        let schedIndivOneWeek = indiv.filter((indivNotDone)=>{
-            let today = moment();
+        let schedIndivTwoWeeks = indiv.filter((indivNotDone)=>{
+            let today = moment('2021/01/14', 'YYYY/MM/DD');
             let nextVacc = new Date(indivNotDone.nextVaccDate)
             // let formattedToday = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
             let formattedNextVacc= nextVacc.getFullYear() + '-' + (nextVacc.getMonth()+1) + '-' + nextVacc.getDate()
-           return moment(today, 'YYYY/MM/DD').diff( moment(formattedNextVacc, 'YYYY/MM/DD') , 'week') === -7
+           return moment(today, 'YYYY/MM/DD').diff( moment(formattedNextVacc, 'YYYY/MM/DD') , 'days') === -14
         })
-        if(schedIndivOneWeek.length > 0){
+        if(schedIndivTwoWeeks.length > 0){
            
-            schedIndivOneWeek.map(indiv_sched_oneweek=>{
-                let fname = indiv_sched_oneweek.patientFirstName;
-                let vaccNum = indiv_sched_oneweek.firstVaccPhoneNo
-                twilioService.sendSms(`${indiv_sched_oneweek.phone_no}`, 'Inocul8',
-                `Dear ${fname}, Please be Kindly reminded that your next vaccine shot will be due in one week.  For more info: ${vaccNum}`)
-                     .then(() => {
-                        console.log("message sent");
-                      })
-                      .catch((err) => {
-                          console.log("message not sent")
-                        throw err;
-                    
-                    });
+            schedIndivTwoWeeks.map(indiv_sched_twoweeks=>{
+                let fname = indiv_sched_twoweeks.patientFirstName;
+                let lastname = indiv_sched_twoweeks.patientLastName;
+                let vaccine = indiv_sched_twoweeks.vaccine;
+                let vaccNum = indiv_sched_twoweeks.firstVaccPhoneNo;
+                let vaccstages = indiv_sched_twoweeks.vaccstages;
+                let clientmessage = `Dear ${fname},  Please be kindly reminded that your next vaccine shot will be due in two(2) weeks. For more information, please call: ${vaccNum}.
+                Vaccine: ${vaccine.name},
+                Vaccine brand: ${vaccine.brand}, ${vaccine.price},
+                Dose count: ${indiv_sched_twoweeks.next_stage}`;
+                let vaccMessage = `Hello ${vaccstages[vaccstages.length - 1].vaccinator},
+
+                Your client's (${fname}) ${indiv_sched_twoweeks.next_stage} vaccination will be due in two(2) weeks. Kindly follow up with the client. 
+                
+                
+                Client details
+                Name: ${fname} ${lastname}
+                Phone no: ${indiv_sched_twoweeks.patientPhone_no}
+                Email: ${indiv_sched_twoweeks.email}
+                Vaccine: ${vaccine.name}
+                Brand: ${vaccine.brand}, ${vaccine.price}
+                Dose count: ${indiv_sched_twoweeks.next_stage}`
+
+                // admin message reminder
+                let adminMessage = `Hello Inocul8 Admin,
+
+                Your client (${fname} ${lastname}), who was vaccinated by ${vaccstages[vaccstages.length - 1].vaccinator}, ${indiv_sched_twoweeks.next_stage} vaccination will be due in two(2). Kindly follow up with the Pharmacy. 
+                
+                Vaccinator details
+                Name: ${vaccstages[vaccstages.length - 1].vaccinator}
+                Phone no: ${vaccstages[vaccstages.length - 1].phone}
+                Email: ${vaccstages[vaccstages.length - 1].email}
+                
+                Client details
+                Name: ${fname} ${lastname}
+                Phone no: ${indiv_sched_twoweeks.patientPhone_no}
+                Email: ${indiv_sched_twoweeks.email}
+                `
+               
                     emailService.sendText(
-                        indiv_sched_oneweek.email,
+                        indiv_sched_twoweeks.email,
                         "Vaccination Reminder",
-                        `Dear ${fname}, Please be Kindly reminded that your next vaccine shot will be due in one week.  For more info: ${vaccNum}`
+                        clientmessage
                       )
                         .then(() => {
                           console.log("message sent");
@@ -78,17 +104,46 @@ app.use(cookieParser())
                         .catch(() => {
                           console.log("Error");
                         });
+                          // vaccinator email for vaccine reminder
+                      // 
+                      emailService.sendText(
+                        vaccstages[vaccstages.length - 1].email,
+                        "Vaccination Reminder",
+                       vaccMessage
+                      )
+                        .then(() => {
+                          console.log("message sent");
+                        })
+                        .catch(() => {
+                          console.log("Error");
+                        });
+
+                    // admin email for vaccine reminder
+                    // 
+                    // 
+                    // emailService.sendText(
+                    //       'info@inocul8.com.ng',
+                    //       "Vaccination Reminder",
+                    //      adminMessage
+                    //     )
+                    //       .then(() => {
+                    //         console.log("message sent");
+                    //       })
+                    //       .catch(() => {
+                    //         console.log("Error");
+                    //       });
+                        
             })
         } else{
             console.log('no reminder here')
         }
-        console.log(schedIndivOneWeek)
+        console.log(schedIndivTwoWeeks)
     })
 };
 async function twoDaysLater(){
     await indivVacc.find({next_stage: {$ne: 'done'}}, (err, indiv)=>{
         let schedIndivTwoDays = indiv.filter((indivNotDone)=>{
-            let today = moment();
+            let today = moment('2021-01-26', 'YYYY-MM-DD');
             let nextVacc = new Date(indivNotDone.nextVaccDate)
             // let formattedToday = today.getFullYear() + '/' + (today.getMonth()+1) + '/' + today.getDate();
             let formattedNextVacc= nextVacc.getFullYear() + '/' + (nextVacc.getMonth()+1) + '/' + nextVacc.getDate()
@@ -101,12 +156,54 @@ async function twoDaysLater(){
             schedIndivTwoDays.map(async (indiv_sched_twodays)=>{
               console.log( indiv_sched_twodays.firstVaccPhoneNo)
                 let fname = indiv_sched_twodays.patientFirstName
-                let vaccNum =  indiv_sched_twodays.firstVaccPhoneNo
+                let lastname = indiv_sched_twodays.patientLastName;
+                let vaccNum =  indiv_sched_twodays.firstVaccPhoneNo;
+                let vaccine = indiv_sched_twodays.vaccine;
+                let vaccstages = indiv_sched_twodays.vaccstages
+
+                // client message reminder
+                // 
+                let clientmessage = `Dear ${fname},  Please be kindly reminded that your next vaccine shot will be due in two(2) weeks. For more information, please call: ${vaccNum}.
+
+
+Vaccine:  ${vaccine.name},
+Vaccine brand:  ${vaccine.brand}, ${vaccine.price},
+Dose count:  ${indiv_sched_twodays.next_stage}`;
+
+              // vaccinator message reminder
+              let vaccMessage = `Hello ${vaccstages[vaccstages.length - 1].vaccinator},
+
+                Your client's (${fname}) ${indiv_sched_twodays.next_stage} vaccination will be due in 2days. Kindly follow up with the client. 
                 
-                await twilioService.sendSms(`+234${indiv_sched_twodays.patientPhone_no}`, 'Inocul8',
-                `Dear ${fname}, Please be Kindly reminded that your next vaccine shot will be due in two(2) days.  For more info: ${vaccNum}`
-                )
-                     .then((res) => {
+                
+                Client details
+                Name: ${fname} ${lastname}
+                Phone no: ${indiv_sched_twodays.patientPhone_no}
+                Email: ${indiv_sched_twodays.email}
+                Vaccine: ${vaccine.name}
+                Brand: ${vaccine.brand}, ${vaccine.price}
+                Dose count: ${indiv_sched_twodays.next_stage}`
+
+                // admin message reminder
+                let adminMessage = `Hello Inocul8 Admin,
+
+                Your client (${fname}, ${lastname}) who was vaccinated by ${vaccstages[vaccstages.length - 1].vaccinator}, ${indiv_sched_twodays.next_stage} vaccination will be due in 2days. Kindly follow up with the Pharmacy. 
+                
+                Vaccinator details
+                Name: ${vaccstages[vaccstages.length - 1].vaccinator}
+                Phone no: ${vaccstages[vaccstages.length - 1].phone}
+                Email: ${vaccstages[vaccstages.length - 1].email}
+                
+                Client details
+                Name: ${fname} ${lastname}
+                Phone no: ${indiv_sched_twodays.patientPhone_no}
+                Email: ${indiv_sched_twodays.email}
+                `
+                // client sms reminder
+                // 
+                // 
+                twilioService.sendSms("+2348130427849", 'Inocul8', clientmessage)
+                     .then(() => {
                         console.log("message sent");
                       })
                       .catch((err) => {
@@ -114,10 +211,13 @@ async function twoDaysLater(){
                         throw err;
                     
                     });
+                    // client email for  vaccine reminder
+                    // 
+                    // 
                     emailService.sendText(
                         indiv_sched_twodays.email,
                         "Vaccination Reminder",
-                        `Dear ${fname}, Please be kindly reminded that your next vaccine shot will be due in two(2) days.  For more info: ${vaccNum}`
+                       clientmessage
                       )
                         .then(() => {
                           console.log("message sent");
@@ -125,6 +225,35 @@ async function twoDaysLater(){
                         .catch(() => {
                           console.log("Error");
                         });
+                        // 
+                      // vaccinator email for vaccine reminder
+                      // 
+                        emailService.sendText(
+                          vaccstages[vaccstages.length - 1].email,
+                          "Vaccination Reminder",
+                         vaccMessage
+                        )
+                          .then(() => {
+                            console.log("message sent");
+                          })
+                          .catch(() => {
+                            console.log("Error");
+                          });
+
+                      // admin email for vaccine reminder
+                      // 
+                      // 
+                      // emailService.sendText(
+                      //       'info@inocul8.com.ng',
+                      //       "Vaccination Reminder",
+                      //      adminMessage
+                      //     )
+                      //       .then(() => {
+                      //         console.log("message sent");
+                      //       })
+                      //       .catch(() => {
+                      //         console.log("Error");
+                      //       });
             })
         } else{
             console.log('no reminder here')
@@ -132,8 +261,8 @@ async function twoDaysLater(){
         // console.log(schedIndivTwoDays)
     })
 }
-cron.schedule ('0 1 * * *',  async () => {
-   oneWeekLater();
+cron.schedule('0 1 * * *',  async () => {
+   twoWeeksLater();
    twoDaysLater();
 });
 
